@@ -1,0 +1,16 @@
+{
+  "name": "ChurrOS — Linux colombiano ligero",
+  "short_name": "ChurrOS",
+  "description": "Distribución Linux colombiana optimizada para equipos con recursos limitados",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "theme_color": "#f97316",
+  "background_color": "#0f0802",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

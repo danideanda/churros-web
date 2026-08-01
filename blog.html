@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es" class="2xl:text-xl" style="scroll-behavior: smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="darkreader-lock" />
+    <meta name="google-site-verification" content="mLDSAtiiED3QEqsHLnyUTZRR8Uac6OvgoNzwZtsrFmA" />
+    <title>Blog — ChurrOS Linux</title>
+    <meta name="keywords" content="blog, churrOS, modificaciones, versiones, fechas, churros org, churros distro>
+    <meta name="description" content="Novedades, lanzamientos y actualizaciones de ChurrOS, la distribución Linux colombiana ligera y rápida para todos." />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://churroslinux.org/blog.html" />
+    <meta property="og:title" content="Blog — ChurrOS Linux" />
+    <meta property="og:description" content="Novedades, lanzamientos y actualizaciones de ChurrOS, la distribución Linux colombiana ligera y rápida." />
+    <meta property="og:url" content="https://churroslinux.org/blog.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="img/churro.jpeg" />
+    <meta property="og:image:width" content="1600" />
+    <meta property="og:image:height" content="900" />
+    <meta property="og:image:alt" content="ChurrOS — Linux con sabor colombiano" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="img/churro.jpeg" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="sitemap" href="sitemap-index.xml" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="img/logo.churros.png" />
+    <meta name="theme-color" content="#f97316" />
+    <meta name="apple-mobile-web-app-title" content="ChurrOS" />
+    <link rel="stylesheet" href="css/tailwind.css" />
+    <link rel="stylesheet" href="css/custom.css" />
+  </head>
+  <body class="antialiased text-gray-900 dark:text-gray-200 tracking-tight bg-white dark:bg-gray-950">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+      <symbol id="ai:tabler:sun" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0-8 0m-5 0h1m8-9v1m8 8h1m-9 8v1M5.6 5.6l.7.7m12.1-.7l-.7.7m0 11.4l.7.7m-12.1-.7l-.7.7"/></symbol>
+      <symbol id="ai:tabler:menu" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></symbol>
+      <symbol id="ai:tabler:brand-github" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2c2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2a4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6c-.6.6-.6 1.2-.5 2V21"/></symbol>
+      <symbol id="ai:tabler:brand-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4 4l11.733 16H20L8.267 4zm0 16l6.768-6.768m2.46-2.46L20 4"/></symbol>
+      <symbol id="ai:tabler:brand-discord" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 12a1 1 0 1 0 2 0a1 1 0 0 0-2 0m6 0a1 1 0 1 0 2 0a1 1 0 0 0-2 0"/><path d="M15.5 17c0 1 1.5 3 2 3c1.5 0 2.833-1.667 3.5-3c.667-1.667.5-5.833-1.5-11.5c-1.457-1.015-3-1.34-4.5-1.5l-.972 1.923a11.9 11.9 0 0 0-4.053 0L9 4c-1.5.16-3.043.485-4.5 1.5c-2 5.667-2.167 9.833-1.5 11.5c.667 1.333 2 3 3.5 3c.5 0 2-2 2-3"/><path d="M7 16.5c3.5 1 6.5 1 10 0"/></g></symbol>
+      <symbol id="ai:tabler:brand-bluesky" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.335 5.144C4.681 3.945 2 3.017 2 5.97c0 .59.35 4.953.556 5.661C3.269 14.094 5.686 14.381 8 14c-4.045.665-4.889 3.208-2.667 5.41C6.363 20.428 7.246 21 8 21c2 0 3.134-2.769 3.5-3.5q.5-1 .5-1.5q0 .5.5 1.5c.366.731 1.5 3.5 3.5 3.5c.754 0 1.637-.571 2.667-1.59C20.889 17.207 20.045 14.664 16 14c2.314.38 4.73.094 5.444-2.369c.206-.708.556-5.072.556-5.661c0-2.953-2.68-2.025-4.335-.826C15.372 6.806 12.905 10.192 12 12c-.905-1.808-3.372-5.194-5.665-6.856"/></symbol>
+      <symbol id="ai:tabler:brand-mastodon" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M18.648 15.254C16.832 17.017 12 16.88 12 16.88a18.3 18.3 0 0 1-3.288-.256q1.69 2.977 8.982 2.475c-1.945 2.013-13.598 5.257-13.668-7.636L4 10.309c0-3.036.023-4.115 1.352-5.633C7.023 2.766 12 3.01 12 3.01s4.977-.243 6.648 1.667C19.977 6.195 20 7.274 20 10.31s-.456 4.074-1.352 4.944"/><path d="M12 11.204V8.278C12 7.02 11.105 6 10 6S8 7.02 8 8.278V13m4-4.722C12 7.02 12.895 6 14 6s2 1.02 2 2.278V13"/></g></symbol>
+      <symbol id="ai:tabler:brand-reddit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 8c2.648 0 5.028.826 6.675 2.14a2.5 2.5 0 0 1 2.326 4.36c0 3.59-4.03 6.5-9 6.5c-4.875 0-8.845-2.8-9-6.294l-1-.206a2.5 2.5 0 0 1 2.326-4.36C5.973 8.827 8.353 8 11.001 8zm0 0l1-5l6 1"/><path d="M18 4a1 1 0 1 0 2 0a1 1 0 1 0-2 0"/><path fill="currentColor" d="M8.5 13a.5.5 0 1 0 1 0a.5.5 0 1 0-1 0m6 0a.5.5 0 1 0 1 0a.5.5 0 1 0-1 0"/><path d="M10 17q1 .5 2 .5c1 0 1.333-.167 2-.5"/></g></symbol>
+      <symbol id="ai:tabler:brand-patreon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 8.408c-.003-2.299-1.746-4.182-3.79-4.862c-2.54-.844-5.888-.722-8.312.453c-2.939 1.425-3.862 4.545-3.896 7.656c-.028 2.559.22 9.297 3.92 9.345c2.75.036 3.159-3.603 4.43-5.356c.906-1.247 2.071-1.599 3.506-1.963c2.465-.627 4.146-2.626 4.142-5.273"/></symbol>
+      <symbol id="ai:tabler:mail-opened" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m3 9l9 6l9-6l-9-6z"/><path d="M21 9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9m0 10l6-6m6 0l6 6"/></g></symbol>
+    </svg>
+    <header class="sticky top-0 z-40 flex-none mx-auto transition-colors w-full duration-500 lg:z-50 supports-backdrop-blur:bg-white/95 md:backdrop-blur-xs" id="header">
+      <div class="py-3 px-3 mx-auto w-full md:justify-between max-w-6xl md:px-6">
+        <div class="md:flex md:items-center md:justify-between text-gray-700 font-semibold text-sm leading-6 dark:text-gray-200">
+          <a class="hidden md:flex md:items-center" href="index.html">
+            <img class="self-center" src="img/logo.churros.png" loading="eager" decoding="async" alt="ChurrOS logo" width="32" height="32" />
+            <span class="self-center ml-2 text-2xl md:text-xl font-bold text-gray-700 whitespace-nowrap dark:text-white">ChurrOS</span>
+          </a>
+          <div class="flex justify-between md:hidden">
+            <a class="flex items-center" href="index.html">
+              <img class="self-center" src="img/logo.churros.png" loading="eager" decoding="async" alt="ChurrOS logo" width="32" height="32" />
+              <span class="self-center ml-2 text-2xl md:text-xl font-bold text-gray-700 whitespace-nowrap dark:text-white">ChurrOS</span>
+            </a>
+            <div class="flex items-center">
+              <button type="button" class="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" aria-label="Toggle between Dark and Light mode" data-aw-toggle-color-scheme>
+                <svg width="1em" height="1em" class="w-6 h-6"><use href="#ai:tabler:sun"></use></svg>
+              </button>
+              <button type="button" class="ml-1.5 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center transition" aria-label="Toggle Menu" data-aw-toggle-menu>
+                <svg width="1em" height="1em" class="w-6 h-6"><use href="#ai:tabler:menu"></use></svg>
+              </button>
+            </div>
+          </div>
+          <nav class="items-center w-full md:z-60 md:w-auto md:flex text-gray-700 dark:text-gray-200 h-[calc(100vh-100px)] md:h-auto overflow-y-auto md:overflow-visible hidden" aria-label="Main navigation">
+            <ul class="flex flex-col pt-8 md:pt-0 md:flex-row md:self-center w-full md:w-auto text-xl md:text-base md:gap-x-8">
+              <li><a class="hover:text-gray-900 dark:hover:text-white px-4 py-3 md:px-0 md:py-0 flex items-center transition duration-150 ease-in-out hover:underline underline-offset-2" href="download.html">Descargar</a></li>
+              <li><a class="hover:text-gray-900 dark:hover:text-white px-4 py-3 md:px-0 md:py-0 flex items-center transition duration-150 ease-in-out hover:underline underline-offset-2" href="about.html">Acerca de</a></li>
+              <li><a class="hover:text-gray-900 dark:hover:text-white px-4 py-3 md:px-0 md:py-0 flex items-center transition duration-150 ease-in-out hover:underline underline-offset-2" href="blog.html">Blog</a></li>
+              <li class="md:hidden"><a class="font-bold hover:text-gray-900 dark:hover:text-white px-4 py-3 flex items-center transition duration-150 ease-in-out" href="https://github.com/Hoyuse/ChurrOS/releases/tag/v0.1.1">Github</a></li>
+            </ul>
+            <div class="md:self-center flex items-center mb-4 md:mb-0 ml-2">
+              <div class="hidden items-center md:flex">
+                <button type="button" class="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" aria-label="Toggle between Dark and Light mode" data-aw-toggle-color-scheme>
+                  <svg width="1em" height="1em" viewBox="0 0 24 24" class="w-5 h-5"><use href="#ai:tabler:sun"></use></svg>
+                </button>
+                <a href="https://github.com/Hoyuse/ChurrOS/releases/tag/v0.1.1" target="_blank" class="inline-block text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5" aria-label="ChurrOS Github">
+                  <svg width="1em" height="1em" class="w-5 h-5"><use href="#ai:tabler:brand-github"></use></svg>
+                </a>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section class="px-6 sm:px-6 py-18 lg:py-28 mx-auto max-w-4xl">
+        <div class="fixed inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 pointer-events-none" aria-hidden="true">
+          <svg class="relative left-[calc(50%+11rem)] sm:left-[calc(50%+30rem)] -z-10 h-84.75 max-w-none -translate-x-1/2 rotate-35 sm:h-169.5" viewBox="0 0 1155 678" xmlns="http://www.w3.org/2000/svg">
+            <path fill="url(#grad-rczuxwqel)" fill-opacity=".3" d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"></path>
+            <defs>
+              <linearGradient id="grad-rczuxwqel" x1="1155.49" x2="-78.208" y1=".177" y2="474.645" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#f97316"></stop>
+                <stop offset="1" stop-color="#c2410c"></stop>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <header class="mb-8 md:mb-16 text-center max-w-3xl mx-auto">
+          <h1 class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading">ChurrOS Blog</h1>
+        </header>
+        <div class="space-y-8">
+          <article class="rounded-xl border border-surface-200 dark:border-surface-700/50 bg-surface-50 dark:bg-surface-800/30 p-6 aos aos-delay-1">
+            <time class="text-sm text-primary-600 dark:text-primary-400 font-semibold">24 de Julio del 2026</time>
+            <h2 class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">Corrección "BlackScreen" en máquinas virtuales</h2>
+            <p class="mt-3 text-gray-600 dark:text-gray-400 leading-relaxed">Se corrigió la pantalla negra al intentar ejecutar ChurrOS en máquinas virtuales.</p>
+          </article>
+          <article class="rounded-xl border border-surface-200 dark:border-surface-700/50 bg-surface-50 dark:bg-surface-800/30 p-6 aos aos-delay-2">
+            <time class="text-sm text-primary-600 dark:text-primary-400 font-semibold">Miércoles 22 de Julio del 2026</time>
+            <h2 class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">Lanzamiento oficial de ChurrOS Linux</h2>
+            <p class="mt-3 text-gray-600 dark:text-gray-400 leading-relaxed">ChurrOS Linux fue lanzado de manera exitosa.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="relative border-t border-gray-200 dark:border-gray-800 not-prose">
+      <div class="dark:bg-dark absolute inset-0 pointer-events-none" aria-hidden="true"></div>
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 dark:text-gray-300">
+        <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
+          <div class="col-span-12 lg:col-span-4">
+            <div class="mb-2"><a class="inline-block font-bold text-xl" href="index.html">ChurrOS</a></div>
+            <div class="text-sm text-muted">
+              <button class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out mr-2">Aviso legal</button>
+            </div>
+          </div>
+          <div class="col-span-6 md:col-span-3 lg:col-span-2">
+            <div class="dark:text-gray-300 font-medium mb-2">Producto</div>
+            <ul class="text-sm">
+              <li class="mb-2"><a class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out mr-2" href="about.html#team">Equipo</a></li>
+            </ul>
+          </div>
+          <div class="col-span-6 md:col-span-3 lg:col-span-2">
+            <div class="dark:text-gray-300 font-medium mb-2">Soporte</div>
+          </div>
+          <div class="col-span-6 md:col-span-3 lg:col-span-2">
+            <div class="dark:text-gray-300 font-medium mb-2">Distribución</div>
+            <ul class="text-sm">
+              <li class="mb-2"><a class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out mr-2" href="about.html#distribution">Acerca de</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
+          <ul class="flex mb-4 md:order-1 -ml-2 md:ml-4 md:mb-0">
+            <li><a class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" aria-label="X" href="https://x.com/churros"><svg width="1em" height="1em" class="w-5 h-5"><use href="#ai:tabler:brand-x"></use></svg></a></li>
+            <li><a class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" aria-label="Discord" href="https://discord.gg/churros-862292009423470592"><svg width="1em" height="1em" class="w-5 h-5"><use href="#ai:tabler:brand-discord"></use></svg></a></li>
+            <li><a class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" aria-label="Bluesky" href="https://bsky.app/profile/churros.org"><svg width="1em" height="1em" class="w-5 h-5"><use href="#ai:tabler:brand-bluesky"></use></svg></a></li>
+            <li><a class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" aria-label="Mastodon" href="https://fosstodon.org/@ChurrOS"><svg width="1em" height="1em" class="w-5 h-5"><use href="#ai:tabler:brand-mastodon"></use></svg></a></li>
+            <li><a class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" aria-label="Reddit" href="https://www.reddit.com/r/churros"><svg width="1em" height="1em" class="w-5 h-5"><use href="#ai:tabler:brand-reddit"></use></svg></a></li>
+            <li><a class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" aria-label="Patreon" href="https://www.patreon.com/ChurrOS"><svg width="1em" height="1em" class="w-5 h-5"><use href="#ai:tabler:brand-patreon"></use></svg></a></li>
+            <li><a class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" aria-label="Github" href="https://github.com/churros"><svg width="1em" height="1em" viewBox="0 0 24 24" class="w-5 h-5"><use href="#ai:tabler:brand-github"></use></svg></a></li>
+            <li><a class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" aria-label="Mail" href="mailto:admin@churros.org"><svg width="1em" height="1em" class="w-5 h-5"><use href="#ai:tabler:mail-opened"></use></svg></a></li>
+          </ul>
+          <div class="text-sm mr-4 dark:text-gray-300">
+            <img src="img/logo.churros.png" alt="ChurrOS" width="20" height="20" class="w-5 h-5 md:w-6 md:h-6 md:-mt-0.5 mr-1.5 float-left rounded-xs" />
+            Hecho por <a class="text-primary-700 dark:text-primary-300 font-bold underline underline-offset-2 decoration-2" href="index.html">ChurrOS</a> · Todos los derechos reservados.
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script type="module" src="js/router.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

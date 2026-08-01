@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://churroslinux.org/sitemap-index.xml
