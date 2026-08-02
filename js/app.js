@@ -95,6 +95,16 @@
     }
   }
 
+  function openLinksInNewTab() {
+    document.querySelectorAll("a[href]").forEach((link) => {
+      link.setAttribute("target", "_blank");
+      const relParts = new Set((link.getAttribute("rel") || "").split(/\s+/).filter(Boolean));
+      relParts.add("noopener");
+      relParts.add("noreferrer");
+      link.setAttribute("rel", [...relParts].join(" "));
+    });
+  }
+
   document.addEventListener("click", (e) => {
     const menuBtn = e.target.closest("[data-aw-toggle-menu]");
     if (menuBtn) {
@@ -120,10 +130,12 @@
       initUI();
       initScrollListener();
       initAOS();
+      openLinksInNewTab();
     });
   } else {
     initUI();
     initScrollListener();
     initAOS();
+    openLinksInNewTab();
   }
 })();
