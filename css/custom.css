@@ -75,6 +75,11 @@ html.theme-transition *::after {
   -webkit-backdrop-filter: blur(4px);
 }
 
+#faq details > summary {
+  margin: -1.25rem;
+  padding: 1.25rem;
+}
+
 .dark #header.scroll {
   background-color: rgba(3, 7, 18, 0.95);
 }
