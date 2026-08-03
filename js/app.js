@@ -19,7 +19,10 @@
       applyTheme("dark");
     } else if (localStorage.theme === "light") {
       applyTheme("light");
-    } else if (defaultTheme === "system") {
+    } else if (
+      defaultTheme === "system" ||
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
       applyTheme(
         window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
       );
@@ -36,69 +39,92 @@
     });
   });
 
-  function initUI() {
-    document.querySelector("#header nav")?.classList.add("hidden");
-    const menuBtn = document.querySelector("[data-aw-toggle-menu]");
-    if (menuBtn) menuBtn.classList.remove("expanded");
-    document.body.classList.remove("overflow-hidden");
-    document.getElementById("header")?.classList.remove("h-screen");
+  function getMenuButton() {
+    return document.querySelector("[data-aw-toggle-menu]");
+  }
 
-    let ticking = false;
-    let lastKnownScrollPosition = window.scrollY;
+  function getNav() {
+    return document.querySelector("#header nav");
+  }
 
-    function applyHeaderStylesOnScroll() {
-      const header = document.getElementById("header");
-      if (!header) return;
-      if (lastKnownScrollPosition > 60 && !header.classList.contains("scroll")) {
-        header.classList.add("scroll");
-      } else if (lastKnownScrollPosition <= 60 && header.classList.contains("scroll")) {
-        header.classList.remove("scroll");
-      }
-      ticking = false;
+  function setMenuOpen(open) {
+    const menuBtn = getMenuButton();
+    const nav = getNav();
+
+    if (menuBtn) {
+      menuBtn.classList.toggle("expanded", open);
+      menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
     }
 
-    applyHeaderStylesOnScroll();
+    document.body.classList.toggle("overflow-hidden", open);
+    document.getElementById("header")?.classList.toggle("h-screen", open);
+    document.getElementById("gradient")?.classList.toggle("hidden", !open);
+
+    if (nav) {
+      nav.classList.toggle("hidden", !open);
+    }
+  }
+
+  function initUI() {
+    setMenuOpen(false);
+
+    const header = document.getElementById("header");
+    if (!header) return;
+    if (window.scrollY > 60) {
+      header.classList.add("scroll");
+    } else {
+      header.classList.remove("scroll");
+    }
   }
 
   function initScrollListener() {
     if (window.churrosScrollListenerAttached) return;
+
     let ticking = false;
-    let lastKnownScrollPosition = window.scrollY;
-    document.addEventListener("scroll", () => {
-      lastKnownScrollPosition = window.scrollY;
-      if (!ticking) {
+    document.addEventListener(
+      "scroll",
+      () => {
+        if (ticking) return;
+        ticking = true;
         window.requestAnimationFrame(() => {
           const header = document.getElementById("header");
-          if (!header) return;
-          if (lastKnownScrollPosition > 60 && !header.classList.contains("scroll")) {
-            header.classList.add("scroll");
-          } else if (lastKnownScrollPosition <= 60 && header.classList.contains("scroll")) {
-            header.classList.remove("scroll");
+          if (header) {
+            if (window.scrollY > 60) {
+              header.classList.add("scroll");
+            } else {
+              header.classList.remove("scroll");
+            }
           }
           ticking = false;
         });
-        ticking = true;
-      }
-    });
+      },
+      { passive: true },
+    );
+
     window.churrosScrollListenerAttached = true;
   }
 
   function initAOS() {
     const aosElements = document.querySelectorAll(".aos, .aos-fade");
-    if (aosElements.length) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("animated");
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.1 },
-      );
-      aosElements.forEach((el) => observer.observe(el));
+    if (!aosElements.length) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      aosElements.forEach((el) => el.classList.add("animated"));
+      return;
     }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animated");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+    aosElements.forEach((el) => observer.observe(el));
   }
 
   function openExternalLinksInNewTab() {
@@ -128,10 +154,8 @@
         relParts.add("noopener");
         relParts.add("noreferrer");
         link.setAttribute("rel", [...relParts].join(" "));
-      } else {
-        if (link.getAttribute("target") === "_blank") {
-          link.removeAttribute("target");
-        }
+      } else if (link.getAttribute("target") === "_blank") {
+        link.removeAttribute("target");
       }
     });
   }
@@ -139,11 +163,8 @@
   document.addEventListener("click", (e) => {
     const menuBtn = e.target.closest("[data-aw-toggle-menu]");
     if (menuBtn) {
-      menuBtn.classList.toggle("expanded");
-      document.body.classList.toggle("overflow-hidden");
-      document.getElementById("header")?.classList.toggle("h-screen");
-      document.getElementById("gradient")?.classList.toggle("hidden");
-      document.querySelector("#header nav")?.classList.toggle("hidden");
+      const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
+      setMenuOpen(!isOpen);
       return;
     }
 
@@ -153,6 +174,27 @@
       document.documentElement.classList.toggle("dark");
       localStorage.theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
       return;
+    }
+
+    const nav = getNav();
+    const toggle = getMenuButton();
+    if (
+      nav &&
+      toggle &&
+      toggle.getAttribute("aria-expanded") === "true" &&
+      !nav.contains(e.target) &&
+      !toggle.contains(e.target)
+    ) {
+      setMenuOpen(false);
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const toggle = getMenuButton();
+    if (toggle && toggle.getAttribute("aria-expanded") === "true") {
+      setMenuOpen(false);
+      toggle.focus();
     }
   });
 
