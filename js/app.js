@@ -1,5 +1,5 @@
 (function () {
-  const defaultTheme = "light";
+  const defaultTheme = "system";
 
   function applyTheme(theme) {
     if (theme === "dark") {
@@ -10,15 +10,21 @@
   }
 
   const setThemeMode = () => {
-    if ((defaultTheme && defaultTheme.endsWith(":only")) || (!localStorage.theme && defaultTheme !== "system")) {
+    if (defaultTheme && defaultTheme.endsWith(":only")) {
       applyTheme(defaultTheme.replace(":only", ""));
-    } else if (
-      localStorage.theme === "dark" ||
-      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
+      return;
+    }
+
+    if (localStorage.theme === "dark") {
       applyTheme("dark");
-    } else {
+    } else if (localStorage.theme === "light") {
       applyTheme("light");
+    } else if (defaultTheme === "system") {
+      applyTheme(
+        window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
+      );
+    } else {
+      applyTheme(defaultTheme === "dark" ? "dark" : "light");
     }
   };
 
