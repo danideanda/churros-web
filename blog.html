@@ -1,9 +1,18 @@
 <!doctype html>
-<html lang="es" class="2xl:text-xl" style="scroll-behavior: smooth">
+<html lang="es" class="2xl:text-xl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="darkreader-lock" />
+    <script>
+      (function () {
+        var theme = localStorage.theme;
+        var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (theme === "dark" || (!theme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <meta name="darkreader-lock" content="" />
     <meta name="google-site-verification" content="mLDSAtiiED3QEqsHLnyUTZRR8Uac6OvgoNzwZtsrFmA" />
     <title>Blog — ChurrOS Linux</title>
     <meta name="keywords" content="blog, churrOS, modificaciones, versiones, fechas, churros org, churros distro" />
