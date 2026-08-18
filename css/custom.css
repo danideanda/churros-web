@@ -96,3 +96,13 @@ html.theme-transition *::after {
     scroll-behavior: smooth;
   }
 }
+
+.download-actions {
+  align-items: flex-start !important;
+}
+
+.download-actions .btn-secondary {
+  white-space: normal;
+  line-height: 1.35;
+  width: max-content;
+}
