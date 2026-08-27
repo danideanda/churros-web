@@ -13,12 +13,12 @@
       })();
     </script>
     <meta name="darkreader-lock" content="" />
-    <title>Descargar ChurrOS — Linux colombiano ligero</title>
-    <meta name="description" content="Descarga ChurrOS Niri Edition, la distribución Linux colombiana ligera y rápida basada en Arch. Ideal para equipos con recursos limitados." />
+    <title>Descargar ChurrOS — Niri y XFCE</title>
+    <meta name="description" content="Descarga ChurrOS en edición Niri o XFCE. Distribución Linux colombiana ligera y rápida basada en Arch, pensada para equipos con recursos limitados." />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://www.churroslinux.org/download.html" />
     <meta property="og:title" content="Descargar ChurrOS — Linux colombiano ligero" />
-    <meta property="og:description" content="Descarga ChurrOS Niri Edition, la distribución Linux colombiana ligera y rápida basada en Arch." />
+    <meta property="og:description" content="Descarga ChurrOS en edición Niri o XFCE. Distribución Linux colombiana ligera y rápida basada en Arch." />
     <meta property="og:url" content="https://www.churroslinux.org/download.html" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://www.churroslinux.org/img/churro.jpeg" />
@@ -34,7 +34,7 @@
     <meta name="theme-color" content="#f97316" />
     <meta name="apple-mobile-web-app-title" content="ChurrOS" />
     <link rel="stylesheet" href="css/tailwind.css" />
-    <link rel="stylesheet" href="css/custom.css" />
+    <link rel="stylesheet" href="css/custom.css?v=editions" />
   </head>
 
   <body class="antialiased text-gray-900 dark:text-gray-200 tracking-tight bg-white dark:bg-gray-950">
@@ -158,114 +158,136 @@
 
       <section class="pt-12 md:pt-24 pb-20 md:pb-52">
         <div class="mx-auto max-w-6xl px-3 md:px-6">
-          <div class="flex flex-wrap md:flex-nowrap items-center md:space-x-10 aos aos-delay-1">
+          <div class="mb-10 md:mb-12">
+            <h1 class="mb-4 text-4xl md:text-5xl font-bold font-heading leading-none dark:text-white">
+              Descargar ChurrOS
+            </h1>
+            <p class="text-lg text-gray-900 dark:text-gray-400 font-medium leading-relaxed md:max-w-xl">
+              Elige el escritorio que mejor te quede. Las dos ediciones están basadas en Arch y pensadas para equipos ligeros.
+            </p>
+          </div>
 
-            <div class="w-full md:w-1/2 mb-8 md:mb-0">
-              <h1 class="mb-9 text-4xl md:text-6xl xl:text-8xl font-bold font-heading leading-none lg:text-wrap md:max-w-md dark:text-white">
-                Niri Edition
-              </h1>
-
-              <p class="mb-10 text-lg text-gray-900 dark:text-gray-400 font-medium leading-relaxed md:max-w-md whitespace-pre-line">
-                ChurrOS con Niri — un compositor Wayland minimalista y eficiente. Ideal para equipos con recursos limitados, ofreciendo una experiencia limpia, rápida y moderna sin sacrificar rendimiento.
-              </p>
-
-              <div class="download-actions flex flex-col gap-6" style="align-items: flex-start">
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso" class="btn btn-secondary py-4 px-6 font-semibold inline-flex items-center gap-2 rounded-lg text-left" style="white-space: normal; line-height: 1.35; width: max-content">
-                  <svg width="1em" height="1em" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                  </svg>
-                  <span>Descargar la última versión<br>de ChurrOS Niri (v1.0)</span>
-                </a>
-
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent" class="btn py-4 px-6 font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent">
-                  <svg width="1em" height="1em" class="w-5 h-5 mr-2">
-                    <use href="#ai:tabler:magnet"></use>
-                  </svg>
-                  Descargar torrent
-                </a>
-              </div>
-
-              <!-- Sección de versiones -->
-              <details class="mt-6">
-                <summary style="font-size: 18px">Todas las versiones</summary>
-
-                <div class="flex flex-wrap gap-4 mt-4">
-                  <a href="https://download.churroslinux.org/ChurrOS-2026.07.23-x86_64-v0.1.iso" class="btn btn-primary py-1 px-2 font-semibold inline-flex items-center rounded-lg">
-                    <svg width="1em" height="1em" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <div class="edition-cards">
+            <article class="edition-card">
+              <img src="img/hero.churros.jpg" alt="ChurrOS Niri Edition" width="1280" height="720" class="edition-card-shot" loading="eager" decoding="async" />
+              <div class="edition-card-body">
+                <span class="edition-pill">Wayland · mosaico</span>
+                <h2 class="text-2xl font-bold font-heading mb-2 dark:text-white">Niri Edition</h2>
+                <p class="mb-6 text-gray-800 dark:text-gray-200">
+                  Compositor Wayland minimalista y eficiente. Una experiencia limpia, rápida y moderna, orientada al teclado.
+                </p>
+                <div class="edition-card-actions">
+                  <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso" class="btn btn-secondary py-3 px-6 font-semibold inline-flex items-center gap-2 rounded-lg text-left">
+                    <svg width="1em" height="1em" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                       <polyline points="7 10 12 15 17 10"></polyline>
                       <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                    ChurrOS Niri v0.1
+                    Descargar Niri v1.0
                   </a>
-
-                  <a href="https://download.churroslinux.org/ChurrOS-2026.08.10-x86_64-v0.4.iso" class="btn btn-primary py-1 px-2 font-semibold inline-flex items-center rounded-lg">
-                    <svg width="1em" height="1em" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    ChurrOS Niri v0.4
-                  </a>
-
-                  <a href="https://download.churroslinux.org/ChurrOS-2026.08.14-x86_64-v0.6.iso" class="btn btn-primary py-1 px-2 font-semibold inline-flex items-center rounded-lg">
-                    <svg width="1em" height="1em" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    ChurrOS Niri v0.6
-                  </a>
-
-                  <a href="https://download.churroslinux.org/ChurrOS-2026.08.14-x86_64.v0.6.iso.torrent" class="btn py-1 px-2 font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.14-x86_64.v0.6.iso.torrent">
+                  <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent" class="btn py-3 px-6 font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent">
                     <svg width="1em" height="1em" class="w-5 h-5 mr-2">
                       <use href="#ai:tabler:magnet"></use>
                     </svg>
-                    Torrent v0.6
-                  </a>
-
-                  <a href="https://download.churroslinux.org/ChurrOS-2026.08.17-x86_64-v0.7.iso" class="btn btn-primary py-1 px-2 font-semibold inline-flex items-center rounded-lg">
-                    <svg width="1em" height="1em" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    ChurrOS Niri v0.7
-                  </a>
-
-                  <a href="https://download.churroslinux.org/ChurrOS-2026.08.17-x86_64-v0.7.iso.torrent" class="btn py-1 px-2 font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.17-x86_64-v0.7.iso.torrent">
-                    <svg width="1em" height="1em" class="w-5 h-5 mr-2">
-                      <use href="#ai:tabler:magnet"></use>
-                    </svg>
-                    Torrent v0.7
-                  </a>
-
-                  <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso" class="btn btn-primary py-1 px-2 font-semibold inline-flex items-center rounded-lg">
-                    <svg width="1em" height="1em" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    ChurrOS Niri v1.0
-                  </a>
-
-                  <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent" class="btn py-1 px-2 font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent">
-                    <svg width="1em" height="1em" class="w-5 h-5 mr-2">
-                      <use href="#ai:tabler:magnet"></use>
-                    </svg>
-                    Torrent v1.0
+                    Torrent
                   </a>
                 </div>
-              </details>
-            </div>
+              </div>
+            </article>
 
-            <div class="w-full md:w-1/2">
-              <img src="img/hero.churros.jpg" alt="Niri Edition" width="1280" height="720" class="rounded-xl shadow dark:shadow-gray-900/50 aos aos-delay-2" loading="eager" decoding="async" />
-            </div>
-
+            <article class="edition-card">
+              <img src="img/hero.xfce.png" alt="ChurrOS XFCE Edition" width="1280" height="720" class="edition-card-shot" loading="eager" decoding="async" />
+              <div class="edition-card-body">
+                <span class="edition-pill">X11 · escritorio clásico</span>
+                <h2 class="text-2xl font-bold font-heading mb-2 dark:text-white">XFCE Edition</h2>
+                <p class="mb-6 text-gray-800 dark:text-gray-200">
+                  Escritorio tradicional, ligero y familiar. Panel, menú de aplicaciones y ventanas clásicas, con el look de conejo y chocolate.
+                </p>
+                <div class="edition-card-actions">
+                  <a href="https://download.churroslinux.org/ChurrOS-XFCE-2026.08.24-x86_64-v1.0.iso" class="btn btn-secondary py-3 px-6 font-semibold inline-flex items-center gap-2 rounded-lg text-left">
+                    <svg width="1em" height="1em" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Descargar XFCE v1.0
+                  </a>
+                </div>
+              </div>
+            </article>
           </div>
+
+          <details class="mt-10">
+            <summary style="font-size: 18px">Todas las versiones</summary>
+
+            <div class="flex flex-wrap gap-4 mt-4">
+              <a href="https://download.churroslinux.org/ChurrOS-2026.07.23-x86_64-v0.1.iso" class="btn btn-primary py-1 px-2 font-semibold inline-flex items-center rounded-lg">
+                <svg width="1em" height="1em" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                ChurrOS Niri v0.1
+              </a>
+
+              <a href="https://download.churroslinux.org/ChurrOS-2026.08.10-x86_64-v0.4.iso" class="btn btn-primary py-1 px-2 font-semibold inline-flex items-center rounded-lg">
+                <svg width="1em" height="1em" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                ChurrOS Niri v0.4
+              </a>
+
+              <a href="https://download.churroslinux.org/ChurrOS-2026.08.14-x86_64-v0.6.iso" class="btn btn-primary py-1 px-2 font-semibold inline-flex items-center rounded-lg">
+                <svg width="1em" height="1em" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                ChurrOS Niri v0.6
+              </a>
+
+              <a href="https://download.churroslinux.org/ChurrOS-2026.08.14-x86_64.v0.6.iso.torrent" class="btn py-1 px-2 font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.14-x86_64.v0.6.iso.torrent">
+                <svg width="1em" height="1em" class="w-5 h-5 mr-2">
+                  <use href="#ai:tabler:magnet"></use>
+                </svg>
+                Torrent v0.6
+              </a>
+
+              <a href="https://download.churroslinux.org/ChurrOS-2026.08.17-x86_64-v0.7.iso" class="btn btn-primary py-1 px-2 font-semibold inline-flex items-center rounded-lg">
+                <svg width="1em" height="1em" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                ChurrOS Niri v0.7
+              </a>
+
+              <a href="https://download.churroslinux.org/ChurrOS-2026.08.17-x86_64-v0.7.iso.torrent" class="btn py-1 px-2 font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.17-x86_64-v0.7.iso.torrent">
+                <svg width="1em" height="1em" class="w-5 h-5 mr-2">
+                  <use href="#ai:tabler:magnet"></use>
+                </svg>
+                Torrent v0.7
+              </a>
+
+              <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso" class="btn btn-primary py-1 px-2 font-semibold inline-flex items-center rounded-lg">
+                <svg width="1em" height="1em" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                ChurrOS Niri v1.0
+              </a>
+
+              <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent" class="btn py-1 px-2 font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent">
+                <svg width="1em" height="1em" class="w-5 h-5 mr-2">
+                  <use href="#ai:tabler:magnet"></use>
+                </svg>
+                Torrent v1.0
+              </a>
+            </div>
+          </details>
         </div>
       </section>
     </main>
