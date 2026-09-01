@@ -106,3 +106,60 @@ html.theme-transition *::after {
   line-height: 1.35;
   width: max-content;
 }
+
+/* Estilos de Ediciones ChurrOS (Niri & XFCE) */
+.badge-edition {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  background-color: #ffedd5;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+}
+
+.dark .badge-edition {
+  background-color: rgba(67, 20, 7, 0.6);
+  color: #fdba74;
+  border: 1px solid rgba(194, 65, 12, 0.5);
+}
+
+.btn-edition-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background-color: #ea580c;
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 0.6rem;
+  border: 1px solid #c2410c;
+  box-shadow: 0 4px 14px 0 rgba(234, 88, 12, 0.35);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+}
+
+.btn-edition-download:hover {
+  background-color: #f97316;
+  border-color: #ea580c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(249, 115, 22, 0.45);
+}
+
+.edition-divider {
+  border-top: 1px dashed rgba(234, 88, 12, 0.3);
+  margin: 4rem 0;
+}
+
+.dark .edition-divider {
+  border-top: 1px dashed rgba(234, 88, 12, 0.25);
+}
+
