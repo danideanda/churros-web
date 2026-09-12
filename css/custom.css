@@ -163,3 +163,48 @@ html.theme-transition *::after {
   border-top: 1px dashed rgba(234, 88, 12, 0.25);
 }
 
+.version-history-links {
+  gap: 0.9rem;
+}
+
+.version-history-links .btn {
+  min-height: 2.75rem;
+  flex: 1 1 13rem;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background-color: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.version-history-links .btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(234, 88, 12, 0.65);
+  box-shadow: 0 6px 14px rgba(234, 88, 12, 0.14);
+}
+
+.version-history-links .btn-primary {
+  border-color: rgba(234, 88, 12, 0.35);
+  background-color: rgba(255, 237, 213, 0.7);
+  color: #c2410c;
+}
+
+.dark .version-history-links .btn {
+  border-color: rgba(148, 163, 184, 0.28);
+  background-color: rgba(30, 41, 59, 0.58);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.dark .version-history-links .btn-primary {
+  border-color: rgba(251, 146, 60, 0.4);
+  background-color: rgba(124, 45, 18, 0.42);
+  color: #fdba74;
+}
+
+@media (max-width: 640px) {
+  .version-history-links .btn {
+    flex-basis: 100%;
+  }
+}
+
