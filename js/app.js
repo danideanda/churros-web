@@ -160,6 +160,17 @@
     });
   }
 
+  function initDonationMenu() {
+    const donationMenu = document.getElementById("donation-menu");
+    if (!donationMenu) return;
+
+    document.querySelectorAll('a[href*="download.churroslinux.org"]').forEach((link) => {
+      link.addEventListener("click", () => {
+        donationMenu.open = true;
+      });
+    });
+  }
+
   document.addEventListener("click", (e) => {
     const menuBtn = e.target.closest("[data-aw-toggle-menu]");
     if (menuBtn) {
@@ -204,11 +215,13 @@
       initScrollListener();
       initAOS();
       openExternalLinksInNewTab();
+      initDonationMenu();
     });
   } else {
     initUI();
     initScrollListener();
     initAOS();
     openExternalLinksInNewTab();
+    initDonationMenu();
   }
 })();

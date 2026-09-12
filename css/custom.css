@@ -163,6 +163,80 @@ html.theme-transition *::after {
   border-top: 1px dashed rgba(234, 88, 12, 0.25);
 }
 
+.donation-menu {
+  margin-top: 4rem;
+  border: 1px solid rgba(234, 88, 12, 0.28);
+  border-radius: 1rem;
+  background: rgba(255, 247, 237, 0.72);
+  box-shadow: 0 8px 24px rgba(124, 45, 18, 0.08);
+  overflow: hidden;
+}
+
+.donation-menu summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: pointer;
+  list-style: none;
+  padding: 1rem 1.25rem;
+  color: #9a3412;
+  font-weight: 700;
+}
+
+.donation-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.donation-menu-title,
+.donation-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.donation-menu-arrow {
+  font-size: 1.25rem;
+  transition: transform 0.2s ease;
+}
+
+.donation-menu[open] .donation-menu-arrow {
+  transform: rotate(180deg);
+}
+
+.donation-menu-content {
+  border-top: 1px solid rgba(234, 88, 12, 0.18);
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.donation-menu-content p {
+  max-width: 48rem;
+  margin: 0 0 1rem;
+  color: #57534e;
+  line-height: 1.6;
+}
+
+.donation-button {
+  text-decoration: none;
+}
+
+.dark .donation-menu {
+  border-color: rgba(251, 146, 60, 0.32);
+  background: rgba(67, 20, 7, 0.45);
+}
+
+.dark .donation-menu summary {
+  color: #fdba74;
+}
+
+.dark .donation-menu-content {
+  border-top-color: rgba(251, 146, 60, 0.22);
+}
+
+.dark .donation-menu-content p {
+  color: #d6d3d1;
+}
+
 .version-history-links {
   gap: 0.9rem;
 }
