@@ -448,27 +448,5 @@
     </footer>
 
     <script src="js/app.js"></script>
-    <script>
-      (function () {
-        var editionSwitch = document.getElementById("edition-switch");
-        var versionGrid = document.getElementById("version-grid");
-        if (!editionSwitch || !versionGrid) return;
-
-        editionSwitch.addEventListener("click", function (e) {
-          var btn = e.target.closest(".edition-switch-option");
-          if (!btn) return;
-          var edition = btn.getAttribute("data-edition");
-
-          editionSwitch
-            .querySelectorAll(".edition-switch-option")
-            .forEach(function (o) {
-              o.classList.toggle("is-active", o === btn);
-              o.setAttribute("aria-selected", o === btn ? "true" : "false");
-            });
-          editionSwitch.setAttribute("data-active", edition);
-          versionGrid.setAttribute("data-active", edition);
-        });
-      })();
-    </script>
   </body>
 </html>

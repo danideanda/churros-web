@@ -171,6 +171,25 @@
     });
   }
 
+  function initEditionSwitch() {
+    const editionSwitch = document.getElementById("edition-switch");
+    const versionGrid = document.getElementById("version-grid");
+    if (!editionSwitch || !versionGrid) return;
+
+    editionSwitch.addEventListener("click", (e) => {
+      const btn = e.target.closest(".edition-switch-option");
+      if (!btn) return;
+      const edition = btn.getAttribute("data-edition");
+
+      editionSwitch.querySelectorAll(".edition-switch-option").forEach((option) => {
+        option.classList.toggle("is-active", option === btn);
+        option.setAttribute("aria-selected", option === btn ? "true" : "false");
+      });
+      editionSwitch.setAttribute("data-active", edition);
+      versionGrid.setAttribute("data-active", edition);
+    });
+  }
+
   document.addEventListener("click", (e) => {
     const menuBtn = e.target.closest("[data-aw-toggle-menu]");
     if (menuBtn) {
@@ -216,6 +235,7 @@
       initAOS();
       openExternalLinksInNewTab();
       initDonationMenu();
+      initEditionSwitch();
     });
   } else {
     initUI();
@@ -223,5 +243,6 @@
     initAOS();
     openExternalLinksInNewTab();
     initDonationMenu();
+    initEditionSwitch();
   }
 })();
