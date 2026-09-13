@@ -208,47 +208,152 @@
                 </span>
                 <span class="text-xl text-primary-600 transition duration-200 group-open:rotate-180">⌄</span>
               </summary>
-              <div class="version-history-links flex flex-wrap gap-3 mt-6 pt-4 border-t border-surface-200 dark:border-surface-800/60">
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso" class="btn btn-primary py-1.5 px-3 text-sm font-semibold inline-flex items-center rounded-lg">
-                  <svg width="1em" height="1em" class="w-4 h-4 mr-1.5"><use href="#ai:tabler:download"></use></svg>
-                  Niri v1.0 (ISO)
-                </a>
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent" class="btn py-1.5 px-3 text-sm font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent">
-                  <svg width="1em" height="1em" class="w-4 h-4 mr-1.5"><use href="#ai:tabler:magnet"></use></svg>
-                  Niri v1.0 (Torrent)
-                </a>
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.31-x86_64-1.0-xfce.iso" class="btn btn-primary py-1.5 px-3 text-sm font-semibold inline-flex items-center rounded-lg">
-                  <svg width="1em" height="1em" class="w-4 h-4 mr-1.5"><use href="#ai:tabler:download"></use></svg>
-                  XFCE v1.0 (ISO)
-                </a>
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.31-x86_64-1.0-xfce.iso.torrent" class="btn py-1.5 px-3 text-sm font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.31-x86_64-1.0-xfce.iso.torrent">
-                  <svg width="1em" height="1em" class="w-4 h-4 mr-1.5"><use href="#ai:tabler:magnet"></use></svg>
-                  XFCE v1.0 (Torrent)
-                </a>
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.17-x86_64-v0.7.iso" class="btn btn-primary py-1.5 px-3 text-sm font-semibold inline-flex items-center rounded-lg">
-                  <svg width="1em" height="1em" class="w-4 h-4 mr-1.5"><use href="#ai:tabler:download"></use></svg>
-                  Niri v0.7 (ISO)
-                </a>
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.17-x86_64-v0.7.iso.torrent" class="btn py-1.5 px-3 text-sm font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.17-x86_64-v0.7.iso.torrent">
-                  <svg width="1em" height="1em" class="w-4 h-4 mr-1.5"><use href="#ai:tabler:magnet"></use></svg>
-                  Niri v0.7 (Torrent)
-                </a>
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.14-x86_64-v0.6.iso" class="btn btn-primary py-1.5 px-3 text-sm font-semibold inline-flex items-center rounded-lg">
-                  <svg width="1em" height="1em" class="w-4 h-4 mr-1.5"><use href="#ai:tabler:download"></use></svg>
-                  Niri v0.6 (ISO)
-                </a>
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.14-x86_64-v0.6.iso.torrent" class="btn py-1.5 px-3 text-sm font-semibold inline-flex items-center rounded-lg" download="ChurrOS-2026.08.14-x86_64-v0.6.iso.torrent">
-                  <svg width="1em" height="1em" class="w-4 h-4 mr-1.5"><use href="#ai:tabler:magnet"></use></svg>
-                  Niri v0.6 (Torrent)
-                </a>
-                <a href="https://download.churroslinux.org/ChurrOS-2026.08.10-x86_64-v0.4.iso" class="btn btn-primary py-1.5 px-3 text-sm font-semibold inline-flex items-center rounded-lg">
-                  <svg width="1em" height="1em" class="w-4 h-4 mr-1.5"><use href="#ai:tabler:download"></use></svg>
-                  Niri v0.4 (ISO)
-                </a>
-                <a href="https://download.churroslinux.org/ChurrOS-2026.07.23-x86_64-v0.1.iso" class="btn btn-primary py-1.5 px-3 text-sm font-semibold inline-flex items-center rounded-lg">
-                  <svg width="1em" height="1em" class="w-4 h-4 mr-1.5"><use href="#ai:tabler:download"></use></svg>
-                  Niri v0.1 (ISO)
-                </a>
+              <div class="mt-6 pt-4 border-t border-surface-200 dark:border-surface-800/60">
+                <div class="flex justify-center mb-5">
+                  <div class="edition-switch" id="edition-switch" data-active="niri" role="tablist" aria-label="Filtrar lanzamientos por edición">
+                    <button type="button" role="tab" aria-selected="true" data-edition="niri" class="edition-switch-option is-active">Niri</button>
+                    <button type="button" role="tab" aria-selected="false" data-edition="xfce" class="edition-switch-option">XFCE</button>
+                    <span class="edition-switch-thumb" aria-hidden="true"></span>
+                  </div>
+                </div>
+                <div class="prototype-layout-grid" id="version-grid" data-active="niri">
+                <div class="prototype-card prototype-card-warm" data-edition="niri">
+                  <div class="prototype-header">
+                    <h3>Niri v1.0</h3>
+                    <span class="prototype-pill">NIRI Edition</span>
+                  </div>
+                  <div class="prototype-version-list">
+                    <div class="prototype-version-row">
+                      <div>
+                        <span class="prototype-version-name">2026-08-24</span>
+                        <small>ISO y Torrent disponibles</small>
+                      </div>
+                      <div class="prototype-action-group">
+                        <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso" class="prototype-btn prototype-btn-primary">
+                          <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:download"></use></svg>
+                          ISO
+                        </a>
+                        <a href="https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent" class="prototype-btn prototype-btn-soft" download="ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent">
+                          <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:magnet"></use></svg>
+                          Torrent
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="prototype-card prototype-card-warm" data-edition="xfce">
+                  <div class="prototype-header">
+                    <h3>XFCE v1.0</h3>
+                    <span class="prototype-pill">XFCE Edition</span>
+                  </div>
+                  <div class="prototype-version-list">
+                    <div class="prototype-version-row">
+                      <div>
+                        <span class="prototype-version-name">2026-08-31</span>
+                        <small>ISO y Torrent disponibles</small>
+                      </div>
+                      <div class="prototype-action-group">
+                        <a href="https://download.churroslinux.org/ChurrOS-2026.08.31-x86_64-1.0-xfce.iso" class="prototype-btn prototype-btn-primary">
+                          <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:download"></use></svg>
+                          ISO
+                        </a>
+                        <a href="https://download.churroslinux.org/ChurrOS-2026.08.31-x86_64-1.0-xfce.iso.torrent" class="prototype-btn prototype-btn-soft" download="ChurrOS-2026.08.31-x86_64-1.0-xfce.iso.torrent">
+                          <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:magnet"></use></svg>
+                          Torrent
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="prototype-card prototype-card-warm" data-edition="niri">
+                  <div class="prototype-header">
+                    <h3>Niri v0.7</h3>
+                    <span class="prototype-pill">NIRI Edition</span>
+                  </div>
+                  <div class="prototype-version-list">
+                    <div class="prototype-version-row">
+                      <div>
+                        <span class="prototype-version-name">2026-08-17</span>
+                        <small>ISO y Torrent disponibles</small>
+                      </div>
+                      <div class="prototype-action-group">
+                        <a href="https://download.churroslinux.org/ChurrOS-2026.08.17-x86_64-v0.7.iso" class="prototype-btn prototype-btn-primary">
+                          <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:download"></use></svg>
+                          ISO
+                        </a>
+                        <a href="https://download.churroslinux.org/ChurrOS-2026.08.17-x86_64-v0.7.iso.torrent" class="prototype-btn prototype-btn-soft" download="ChurrOS-2026.08.17-x86_64-v0.7.iso.torrent">
+                          <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:magnet"></use></svg>
+                          Torrent
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="prototype-card prototype-card-warm" data-edition="niri">
+                  <div class="prototype-header">
+                    <h3>Niri v0.6</h3>
+                    <span class="prototype-pill">NIRI Edition</span>
+                  </div>
+                  <div class="prototype-version-list">
+                    <div class="prototype-version-row">
+                      <div>
+                        <span class="prototype-version-name">2026-08-14</span>
+                        <small>ISO y Torrent disponibles</small>
+                      </div>
+                      <div class="prototype-action-group">
+                        <a href="https://download.churroslinux.org/ChurrOS-2026.08.14-x86_64-v0.6.iso" class="prototype-btn prototype-btn-primary">
+                          <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:download"></use></svg>
+                          ISO
+                        </a>
+                        <a href="https://download.churroslinux.org/ChurrOS-2026.08.14-x86_64-v0.6.iso.torrent" class="prototype-btn prototype-btn-soft" download="ChurrOS-2026.08.14-x86_64-v0.6.iso.torrent">
+                          <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:magnet"></use></svg>
+                          Torrent
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="prototype-card prototype-card-warm" data-edition="niri">
+                  <div class="prototype-header">
+                    <h3>Niri v0.4</h3>
+                    <span class="prototype-pill">NIRI Edition</span>
+                  </div>
+                  <div class="prototype-version-list">
+                    <div class="prototype-version-row">
+                      <div>
+                        <span class="prototype-version-name">2026-08-10</span>
+                        <small>Solo ISO</small>
+                      </div>
+                      <div class="prototype-action-group">
+                        <a href="https://download.churroslinux.org/ChurrOS-2026.08.10-x86_64-v0.4.iso" class="prototype-btn prototype-btn-primary">
+                          <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:download"></use></svg>
+                          ISO
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="prototype-card prototype-card-warm" data-edition="niri">
+                  <div class="prototype-header">
+                    <h3>Niri v0.1</h3>
+                    <span class="prototype-pill">NIRI Edition</span>
+                  </div>
+                  <div class="prototype-version-list">
+                    <div class="prototype-version-row">
+                      <div>
+                        <span class="prototype-version-name">2026-07-23</span>
+                        <small>Solo ISO</small>
+                      </div>
+                      <div class="prototype-action-group">
+                        <a href="https://download.churroslinux.org/ChurrOS-2026.07.23-x86_64-v0.1.iso" class="prototype-btn prototype-btn-primary">
+                          <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:download"></use></svg>
+                          ISO
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               </div>
             </details>
           </div>
@@ -343,5 +448,27 @@
     </footer>
 
     <script src="js/app.js"></script>
+    <script>
+      (function () {
+        var editionSwitch = document.getElementById("edition-switch");
+        var versionGrid = document.getElementById("version-grid");
+        if (!editionSwitch || !versionGrid) return;
+
+        editionSwitch.addEventListener("click", function (e) {
+          var btn = e.target.closest(".edition-switch-option");
+          if (!btn) return;
+          var edition = btn.getAttribute("data-edition");
+
+          editionSwitch
+            .querySelectorAll(".edition-switch-option")
+            .forEach(function (o) {
+              o.classList.toggle("is-active", o === btn);
+              o.setAttribute("aria-selected", o === btn ? "true" : "false");
+            });
+          editionSwitch.setAttribute("data-active", edition);
+          versionGrid.setAttribute("data-active", edition);
+        });
+      })();
+    </script>
   </body>
 </html>
