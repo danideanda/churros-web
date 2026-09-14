@@ -181,9 +181,9 @@
       if (!btn) return;
       const edition = btn.getAttribute("data-edition");
 
-      editionSwitch.querySelectorAll(".edition-switch-option").forEach((option) => {
-        option.classList.toggle("is-active", option === btn);
-        option.setAttribute("aria-selected", option === btn ? "true" : "false");
+      editionSwitch.querySelectorAll(".edition-switch-option").forEach((o) => {
+        o.classList.toggle("is-active", o === btn);
+        o.setAttribute("aria-selected", o === btn ? "true" : "false");
       });
       editionSwitch.setAttribute("data-active", edition);
       versionGrid.setAttribute("data-active", edition);
