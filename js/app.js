@@ -190,6 +190,74 @@
     });
   }
 
+  async function initVersionHistory() {
+    const niriContainer = document.getElementById("version-grid-niri");
+    const xfceContainer = document.getElementById("version-grid-xfce");
+    if (!niriContainer || !xfceContainer) return;
+
+    try {
+      const [niriRes, xfceRes] = await Promise.all([
+        fetch("https://download.churroslinux.org/updates_ISO/NIRI/update.json", { cache: "no-store" }),
+        fetch("https://download.churroslinux.org/updates_ISO/XFE/update.json", { cache: "no-store" }),
+      ]);
+
+      if (!niriRes.ok || !xfceRes.ok) throw new Error("Failed to fetch version data");
+
+      const niriData = await niriRes.json();
+      const xfceData = await xfceRes.json();
+
+      const renderCards = (data, edition) => {
+        return data
+          .slice()
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .map((release) => {
+            const versionLabel = `${edition === "niri" ? "Niri" : "XFCE"} v${release.version}`;
+            const editionLabel = edition === "niri" ? "NIRI Edition" : "XFCE Edition";
+            const hasTorrent = release.url.torrent && release.url.torrent.trim() !== "";
+            const torrentBtn = hasTorrent
+              ? `<a href="${release.url.torrent}" class="prototype-btn prototype-btn-soft" download>
+                   <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:magnet"></use></svg>
+                   Torrent
+                 </a>`
+              : "";
+
+            return `
+              <div class="prototype-card prototype-card-warm" data-edition="${edition}">
+                <div class="prototype-header">
+                  <h3>${versionLabel}</h3>
+                  <span class="prototype-pill">${editionLabel}</span>
+                </div>
+                <div class="prototype-version-list">
+                  <div class="prototype-version-row">
+                    <div>
+                      <span class="prototype-version-name">${release.date}</span>
+                      <small>${hasTorrent ? "ISO y Torrent disponibles" : "Solo ISO"}</small>
+                    </div>
+                    <div class="prototype-action-group">
+                      <a href="${release.url.ISO}" class="prototype-btn prototype-btn-primary">
+                        <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:download"></use></svg>
+                        ISO
+                      </a>
+                      ${torrentBtn}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      };
+
+      niriContainer.innerHTML = renderCards(niriData, "niri");
+      xfceContainer.innerHTML = renderCards(xfceData, "xfce");
+    } catch (err) {
+      console.warn("Version history load failed, using fallback:", err);
+      // Fallback: keep any static content or show error state
+      niriContainer.innerHTML = '<div class="text-center py-8 text-gray-500 dark:text-gray-400">No se pudo cargar el historial de Niri</div>';
+      xfceContainer.innerHTML = '<div class="text-center py-8 text-gray-500 dark:text-gray-400">No se pudo cargar el historial de XFCE</div>';
+    }
+  }
+
   document.addEventListener("click", (e) => {
     const menuBtn = e.target.closest("[data-aw-toggle-menu]");
     if (menuBtn) {
@@ -236,6 +304,7 @@
       openExternalLinksInNewTab();
       initDonationMenu();
       initEditionSwitch();
+      initVersionHistory();
     });
   } else {
     initUI();
@@ -244,5 +313,6 @@
     openExternalLinksInNewTab();
     initDonationMenu();
     initEditionSwitch();
+    initVersionHistory();
   }
 })();
