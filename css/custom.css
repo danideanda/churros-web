@@ -647,6 +647,17 @@ html.theme-transition *::after {
   display: none;
 }
 
+.prototype-layout-grid .prototype-grid-edition[data-edition="xfce"],
+.prototype-layout-grid[data-active="niri"] .prototype-grid-edition[data-edition="xfce"],
+.prototype-layout-grid[data-active="xfce"] .prototype-grid-edition[data-edition="niri"] {
+  display: none;
+}
+
+.prototype-layout-grid[data-active="niri"] .prototype-grid-edition[data-edition="niri"],
+.prototype-layout-grid[data-active="xfce"] .prototype-grid-edition[data-edition="xfce"] {
+  display: contents;
+}
+
 @media (max-width: 640px) {
   .version-history-links .btn {
     flex-basis: 100%;
