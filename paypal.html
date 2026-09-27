@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Donar a ChurrOS por PayPal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#0070ba;--ink:#001435;--muted:#dbeeff;--panel:#001c64;--panel-text:#eef6ff;--panel-muted:#b9d3f5;--card:#fff}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:#fff;font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;display:flex;justify-content:center;padding:32px 20px 56px}
+main{width:100%;max-width:480px;text-align:center}
+a{color:inherit}
+.back{display:inline-block;color:var(--muted);font-size:.95rem;margin-bottom:26px;font-weight:600}
+.logo{display:block;margin:0 auto 12px}
+h1{font-size:2.1rem;font-weight:800;margin:0 0 8px;letter-spacing:-.01em}
+.lead{margin:0 auto 26px;color:var(--muted);max-width:36ch}
+.qr{background:var(--card);border-radius:22px;padding:14px;display:inline-block;box-shadow:0 0 0 6px var(--ink)}
+.qr img{display:block;width:min(72vw,300px);height:auto}
+.qr[hidden],.actions[hidden]{display:none}
+.qr{margin-top:24px}
+.qr canvas,.qr img{display:block;width:min(72vw,280px);height:auto}
+.qr .missing{display:none;width:min(72vw,300px);padding:40px 16px;color:#333;font-weight:600}
+.qr.failed img{display:none}
+.qr.failed .missing{display:block}
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:24px}
+.btn{display:inline-block;background:#fff;color:var(--ink);text-decoration:none;font:inherit;font-weight:800;padding:12px 22px;border:2px solid #fff;border-radius:999px;cursor:pointer}
+.btn.alt{background:transparent;color:#fff}
+.btn:hover{filter:brightness(.92)}
+.btn.alt:hover{background:rgba(255,255,255,.12);filter:none}
+:focus-visible{outline:3px solid #ffc439;outline-offset:3px}
+.toast{min-height:1.4em;margin:12px 0 0;font-weight:600;font-size:.95rem}
+section.box{margin:28px 0 0;padding:20px 22px;background:var(--panel);color:var(--panel-text);border-radius:18px;text-align:left}
+section.box h2{margin:0 0 10px;font-size:1.05rem}
+section.box ol,section.box ul{margin:0;padding-left:20px;color:var(--panel-muted);font-size:.95rem}
+section.box li{margin:5px 0}
+footer{margin-top:26px;color:var(--muted);font-size:.95rem}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html">&larr; Volver al inicio</a>
+  <svg class="logo" width="56" height="56" viewBox="0 0 24 24" role="img" aria-label="PayPal"><path fill="#fff" d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/></svg>
+  <h1>Donar por PayPal</h1>
+  <p class="lead">Tocá el botón, se abre PayPal y elegís cuánto querés aportar a ChurrOS.</p>
+
+  <div class="actions">
+    <a class="btn" href="https://paypal.me/jorgeramos123707" target="_blank" rel="noopener noreferrer">Donar con PayPal</a>
+    <button class="btn alt" id="qrbtn" type="button" aria-expanded="false" aria-controls="qr">Ver código QR</button>
+    <button class="btn alt" id="share" type="button">Compartir esta página</button>
+  </div>
+
+  <div class="qr" id="qr" hidden>
+    <img src="QR/Paypal.png" alt="Código QR de PayPal para donaciones a ChurrOS" width="460" height="460">
+  </div>
+  <p class="toast" id="qrhint" hidden>Escaneá el código con la cámara del celular para abrir PayPal.</p>
+  <div class="actions" id="qrsave" hidden>
+    <a class="btn" id="qrdl" href="QR/Paypal.png" download="qr-paypal.png">Guardar el QR</a>
+  </div>
+  <p class="toast" id="toast" role="status"></p>
+
+  <section class="box">
+    <h2>Cómo donar</h2>
+    <ol>
+      <li>Tocá el botón "Donar con PayPal".</li>
+      <li>Iniciá sesión o pagá con tarjeta.</li>
+      <li>Escribí el monto y confirmá el pago.</li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>En qué ayuda tu donación</h2>
+    <ul>
+      <li>Mantener y hacer crecer ChurrOS, un sistema de código abierto.</li>
+      <li>Cubrir hosting, dominio y herramientas.</li>
+      <li>La donación es voluntaria: ChurrOS sigue siendo gratis.</li>
+    </ul>
+  </section>
+
+  <footer>Gracias por apoyar a ChurrOS.</footer>
+</main>
+<script>
+(function(){
+  var qrbtn=document.getElementById('qrbtn'),qr=document.getElementById('qr'),hint=document.getElementById('qrhint'),save=document.getElementById('qrsave');
+  qrbtn.addEventListener('click',function(){
+    var open=qr.hidden;
+    qr.hidden=!open;hint.hidden=!open;save.hidden=!open;
+    qrbtn.textContent=open?'Ocultar código QR':'Ver código QR';
+    qrbtn.setAttribute('aria-expanded',open);
+  });
+})();
+(function(){
+  var btn=document.getElementById('share'),toast=document.getElementById('toast');
+  function say(t){toast.textContent=t;setTimeout(function(){toast.textContent=''},2500)}
+  btn.addEventListener('click',function(){
+    var url=location.href;
+    if(navigator.share){navigator.share({title:document.title,url:url}).catch(function(){})}
+    else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){say('Enlace copiado')},function(){say('No se pudo copiar el enlace')})}
+    else{say('Copiá el enlace desde la barra del navegador')}
+  });
+})();
+</script>
+</body>
+</html>

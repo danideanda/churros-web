@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Donar a ChurrOS por Nequi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#ff8a1f;--ink:#1e0a1e;--muted:#4a2300;--panel:#2a0a2b;--panel-text:#f8ebf8;--panel-muted:#d3b5d4;--card:#fff}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;display:flex;justify-content:center;padding:32px 20px 56px}
+main{width:100%;max-width:480px;text-align:center}
+a{color:inherit}
+.back{display:inline-block;color:var(--muted);font-size:.95rem;margin-bottom:26px;font-weight:600}
+h1{font-size:2.1rem;font-weight:800;margin:0 0 8px;letter-spacing:-.01em}
+.lead{margin:0 auto 26px;color:var(--muted);max-width:36ch}
+.qr{background:var(--card);border-radius:22px;padding:14px;display:inline-block;box-shadow:0 0 0 6px var(--ink)}
+.qr img{display:block;width:min(72vw,300px);height:auto;image-rendering:pixelated}
+.name{margin:22px 0 4px;font-size:1.25rem;font-weight:800}
+.hint{margin:0 0 22px;color:var(--muted);font-size:.95rem}
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.btn{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;font:inherit;font-weight:800;padding:12px 22px;border:2px solid var(--ink);border-radius:999px;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink)}
+.btn:hover{filter:brightness(1.25)}
+.btn.alt:hover{background:rgba(30,10,30,.1);filter:none}
+:focus-visible{outline:3px solid #fff;outline-offset:3px}
+section.box{margin:28px 0 0;padding:20px 22px;background:var(--panel);color:var(--panel-text);border-radius:18px;text-align:left}
+section.box h2{margin:0 0 10px;font-size:1.05rem}
+section.box p{margin:0 0 8px;color:var(--panel-muted);font-size:.95rem}
+section.box ol,section.box ul{margin:0;padding-left:20px;color:var(--panel-muted);font-size:.95rem}
+section.box li{margin:5px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 10px}
+.chip{background:#ff8a1f;color:var(--ink);font-weight:800;padding:6px 14px;border-radius:999px;font-size:.95rem}
+details{border-top:1px solid rgba(255,255,255,.15);padding:10px 0}
+details:first-of-type{border-top:0}
+summary{cursor:pointer;font-weight:600;color:var(--panel-text)}
+details p{margin:8px 0 0}
+.paypal{display:inline-block;margin-top:6px;background:#ff8a1f;color:var(--ink);font-weight:800;text-decoration:none;padding:9px 18px;border-radius:999px}
+.toast{min-height:1.4em;margin:12px 0 0;font-weight:600;font-size:.95rem}
+footer{margin-top:26px;color:var(--muted);font-size:.95rem}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html">&larr; Volver al inicio</a>
+  <h1>Apoyá a ChurrOS</h1>
+  <p class="lead">Donar por Nequi es fácil: escaneá el código con la app y elegí cuánto querés aportar.</p>
+
+  <div class="qr">
+    <img src="QR/Nequi.png" alt="Código QR de Nequi para donaciones" width="460" height="460" onerror="this.outerHTML='<p style=&quot;color:#333;font-weight:600;padding:40px 16px;width:min(72vw,300px)&quot;>El código QR no está disponible por ahora.</p>'">
+  </div>
+
+  <p class="name">Jorge Ramos</p>
+  <p class="hint">Este nombre te va a aparecer en Nequi antes de confirmar.</p>
+
+  <div class="actions">
+    <a class="btn" href="QR/Nequi.png" download="qr-nequi.png">Guardar el QR</a>
+    <button class="btn alt" id="share" type="button">Compartir esta página</button>
+  </div>
+  <p class="toast" id="toast" role="status"></p>
+
+  <section class="box">
+    <h2>Cómo donar</h2>
+    <ol>
+      <li>Abrí la app de Nequi.</li>
+      <li>Tocá el ícono de escanear QR.</li>
+      <li>Apuntá la cámara a este código.</li>
+      <li>Escribí el monto y confirmá.</li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>Montos de referencia</h2>
+    <div class="chips">
+      <span class="chip">$2.000</span><span class="chip">$5.000</span><span class="chip">$10.000</span><span class="chip">$20.000</span>
+    </div>
+    <p>Son solo ejemplos en pesos colombianos. Podés aportar el monto que quieras, cualquier ayuda suma.</p>
+  </section>
+
+  <section class="box">
+    <h2>En qué ayuda tu donación</h2>
+    <ul>
+      <li>Mantener y hacer crecer ChurrOS, un sistema de código abierto.</li>
+      <li>Seguir mejorando y optimizando la distro para Linux.</li>
+      <li>Cubrir hosting, dominio y herramientas.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Preguntas frecuentes</h2>
+    <details>
+      <summary>¿Es seguro?</summary>
+      <p>El pago se hace dentro de tu app de Nequi. Nunca te pido claves, códigos ni datos de tu cuenta.</p>
+    </details>
+    <details>
+      <summary>¿Puedo donar desde otro país?</summary>
+      <p>Nequi funciona sobre todo en Colombia. Si estás afuera, podés donar por PayPal, que es otra cuenta aparte de Nequi.</p>
+      <a class="paypal" href="paypal.html">Donar con PayPal</a>
+    </details>
+    <details>
+      <summary>¿La donación es obligatoria?</summary>
+      <p>No. ChurrOS sigue siendo gratis y abierto, la donación es voluntaria.</p>
+    </details>
+  </section>
+
+  <footer>Gracias por apoyar a ChurrOS.</footer>
+</main>
+<script>
+(function(){
+  var btn=document.getElementById('share'),toast=document.getElementById('toast');
+  function say(t){toast.textContent=t;setTimeout(function(){toast.textContent=''},2500)}
+  btn.addEventListener('click',function(){
+    var url=location.href;
+    if(navigator.share){navigator.share({title:document.title,url:url}).catch(function(){})}
+    else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){say('Enlace copiado')},function(){say('No se pudo copiar el enlace')})}
+    else{say('Copiá el enlace desde la barra del navegador')}
+  });
+})();
+</script>
+</body>
+</html>
