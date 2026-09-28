@@ -190,72 +190,146 @@
     });
   }
 
-  async function initVersionHistory() {
-    const niriContainer = document.getElementById("version-grid-niri");
-    const xfceContainer = document.getElementById("version-grid-xfce");
-    if (!niriContainer || !xfceContainer) return;
+  const VERSION_FEEDS = [
+    { edition: "niri", label: "Niri", feed: "https://download.churroslinux.org/updates_ISO/NIRI/update.json" },
+    { edition: "xfce", label: "XFCE", feed: "https://download.churroslinux.org/updates_ISO/XFCE/update.json" },
+  ];
+
+  const escapeHtml = (value) =>
+    String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+
+  const safeUrl = (value) => {
+    const url = typeof value === "string" ? value.trim() : "";
+    if (!url) return "";
+    return /^https?:\/\//i.test(url) ? url : "";
+  };
+
+  const readUrlField = (release, ...keys) => {
+    const urls = release && typeof release.url === "object" && release.url !== null ? release.url : {};
+    for (const key of keys) {
+      const found = safeUrl(urls[key]);
+      if (found) return found;
+    }
+    return "";
+  };
+
+  const toTimestamp = (value) => {
+    const parsed = Date.parse(value);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  };
+
+  const toVersionParts = (value) =>
+    String(value ?? "")
+      .trim()
+      .split(".")
+      .map((part) => parseInt(part, 10))
+      .map((num) => (Number.isNaN(num) ? 0 : num));
+
+  const compareVersionParts = (a, b) => {
+    const len = Math.max(a.length, b.length);
+    for (let i = 0; i < len; i++) {
+      const diff = (a[i] || 0) - (b[i] || 0);
+      if (diff !== 0) return diff;
+    }
+    return 0;
+  };
+
+  const normalizeReleases = (payload) => {
+    const list = Array.isArray(payload) ? payload : Array.isArray(payload && payload.releases) ? payload.releases : [];
+    return list
+      .filter((release) => release && typeof release === "object")
+      .map((release) => ({
+        version: String(release.version ?? "").trim(),
+        date: String(release.date ?? "").trim(),
+        iso: readUrlField(release, "ISO", "iso", "Iso"),
+        torrent: readUrlField(release, "torrent", "Torrent"),
+      }))
+      .filter((release) => release.version !== "" && release.iso !== "");
+  };
+
+  const renderReleaseCard = (release, { edition, label }) => {
+    const hasTorrent = release.torrent !== "";
+    const torrentBtn = hasTorrent
+      ? `<a href="${escapeHtml(release.torrent)}" class="prototype-btn prototype-btn-soft" download>
+           <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:magnet"></use></svg>
+           Torrent
+         </a>`
+      : "";
+
+    return `
+      <div class="prototype-card prototype-card-warm" data-edition="${escapeHtml(edition)}">
+        <div class="prototype-header">
+          <h3>${escapeHtml(label)} v${escapeHtml(release.version)}</h3>
+          <span class="prototype-pill">${escapeHtml(label)} Edition</span>
+        </div>
+        <div class="prototype-version-list">
+          <div class="prototype-version-row">
+            <div>
+              <span class="prototype-version-name">${escapeHtml(release.date)}</span>
+              <small>${hasTorrent ? "ISO y Torrent disponibles" : "Solo ISO"}</small>
+            </div>
+            <div class="prototype-action-group">
+              <a href="${escapeHtml(release.iso)}" class="prototype-btn prototype-btn-primary">
+                <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:download"></use></svg>
+                ISO
+              </a>
+              ${torrentBtn}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  async function loadEditionReleases(feed) {
+    const response = await fetch(feed, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const text = await response.text();
+    let payload;
 
     try {
-      const [niriRes, xfceRes] = await Promise.all([
-        fetch("https://download.churroslinux.org/updates_ISO/NIRI/update.json", { cache: "no-store" }),
-        fetch("https://download.churroslinux.org/updates_ISO/XFE/update.json", { cache: "no-store" }),
-      ]);
-
-      if (!niriRes.ok || !xfceRes.ok) throw new Error("Failed to fetch version data");
-
-      const niriData = await niriRes.json();
-      const xfceData = await xfceRes.json();
-
-      const renderCards = (data, edition) => {
-        return data
-          .slice()
-          .sort((a, b) => new Date(b.date) - new Date(a.date))
-          .map((release) => {
-            const versionLabel = `${edition === "niri" ? "Niri" : "XFCE"} v${release.version}`;
-            const editionLabel = edition === "niri" ? "NIRI Edition" : "XFCE Edition";
-            const hasTorrent = release.url.torrent && release.url.torrent.trim() !== "";
-            const torrentBtn = hasTorrent
-              ? `<a href="${release.url.torrent}" class="prototype-btn prototype-btn-soft" download>
-                   <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:magnet"></use></svg>
-                   Torrent
-                 </a>`
-              : "";
-
-            return `
-              <div class="prototype-card prototype-card-warm" data-edition="${edition}">
-                <div class="prototype-header">
-                  <h3>${versionLabel}</h3>
-                  <span class="prototype-pill">${editionLabel}</span>
-                </div>
-                <div class="prototype-version-list">
-                  <div class="prototype-version-row">
-                    <div>
-                      <span class="prototype-version-name">${release.date}</span>
-                      <small>${hasTorrent ? "ISO y Torrent disponibles" : "Solo ISO"}</small>
-                    </div>
-                    <div class="prototype-action-group">
-                      <a href="${release.url.ISO}" class="prototype-btn prototype-btn-primary">
-                        <svg width="1em" height="1em" class="w-4 h-4 mr-1"><use href="#ai:tabler:download"></use></svg>
-                        ISO
-                      </a>
-                      ${torrentBtn}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            `;
-          })
-          .join("");
-      };
-
-      niriContainer.innerHTML = renderCards(niriData, "niri");
-      xfceContainer.innerHTML = renderCards(xfceData, "xfce");
+      payload = JSON.parse(text);
     } catch (err) {
-      console.warn("Version history load failed, using fallback:", err);
-      // Fallback: keep any static content or show error state
-      niriContainer.innerHTML = '<div class="text-center py-8 text-gray-500 dark:text-gray-400">No se pudo cargar el historial de Niri</div>';
-      xfceContainer.innerHTML = '<div class="text-center py-8 text-gray-500 dark:text-gray-400">No se pudo cargar el historial de XFCE</div>';
+      throw new Error(`invalid JSON in ${feed} (${err.message})`);
     }
+
+    const releases = normalizeReleases(payload);
+
+    if (releases.length === 0) {
+      throw new Error(`no valid releases in ${feed}`);
+    }
+
+    return releases.sort((a, b) => {
+      const byDate = toTimestamp(b.date) - toTimestamp(a.date);
+      if (byDate !== 0) return byDate;
+      return compareVersionParts(toVersionParts(b.version), toVersionParts(a.version));
+    });
+  }
+
+  async function initVersionHistory() {
+    await Promise.all(
+      VERSION_FEEDS.map(async ({ edition, label, feed }) => {
+        const container = document.getElementById(`version-grid-${edition}`);
+        if (!container) return;
+
+        try {
+          const releases = await loadEditionReleases(feed);
+          container.innerHTML = releases.map((release) => renderReleaseCard(release, { edition, label })).join("");
+        } catch (err) {
+          console.warn(`Version history load failed for ${edition}:`, err);
+          container.innerHTML = `<div class="text-center py-8 text-gray-500 dark:text-gray-400">No se pudo cargar el historial de ${escapeHtml(label)}</div>`;
+        }
+      }),
+    );
   }
 
   document.addEventListener("click", (e) => {
