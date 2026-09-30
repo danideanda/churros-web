@@ -332,6 +332,168 @@
     );
   }
 
+  function initDistroWatchStats() {
+    const section = document.getElementById("distrowatch");
+    const chart = section?.querySelector("[data-dw-chart]");
+    const periodControls = section?.querySelector("[data-dw-periods]");
+    const chartNote = section?.querySelector("[data-dw-chart-note]");
+    const status = section?.querySelector("[data-dw-status]");
+    if (!section || !chart || !periodControls || !chartNote || !status) return;
+
+    let activePeriod = "30";
+    let history = [];
+
+    function setMetric(name, value) {
+      const element = section.querySelector(`[data-dw-value="${name}"]`);
+      if (element) element.textContent = value;
+    }
+
+    function renderChart(period) {
+      activePeriod = period;
+      const days = Number(period);
+      const latestDate = history.length ? new Date(`${history[history.length - 1].date}T23:59:59Z`) : new Date();
+      const firstDate = new Date(latestDate);
+      firstDate.setUTCDate(firstDate.getUTCDate() - days + 1);
+      const entries = history.filter((entry) => {
+        const entryDate = new Date(`${entry.date}T00:00:00Z`);
+        return entryDate >= firstDate && entryDate <= latestDate;
+      });
+      const width = Math.max(240, chart.parentElement.clientWidth);
+      const height = 280;
+      const padding = { top: 18, right: 12, bottom: 46, left: width < 420 ? 38 : 48 };
+      const plotWidth = width - padding.left - padding.right;
+      const plotHeight = height - padding.top - padding.bottom;
+      const highestValue = Math.max(0, ...entries.map((entry) => entry.pageHitsPerDay));
+      const maximum = Math.max(5, Math.ceil(highestValue / 5) * 5);
+      const y = (value) => padding.top + (1 - value / maximum) * plotHeight;
+      const baseline = height - padding.bottom;
+      const barStep = entries.length ? plotWidth / entries.length : plotWidth;
+      const barWidth = Math.min(36, barStep * 0.62);
+      const svgNamespace = "http://www.w3.org/2000/svg";
+      const createSvgElement = (name, attributes = {}) => {
+        const element = document.createElementNS(svgNamespace, name);
+        Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+        return element;
+      };
+
+      chart.replaceChildren();
+      chart.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      chart.setAttribute("aria-label", `Historial de visitas diarias verificadas de los últimos ${period} días`);
+
+      for (let tick = 0; tick <= 4; tick += 1) {
+        const value = Math.round((maximum * tick) / 4);
+        const yPosition = y(value);
+        const gridLine = createSvgElement("line", {
+          x1: padding.left,
+          x2: width - padding.right,
+          y1: yPosition,
+          y2: yPosition,
+          class: "distrowatch-chart-grid",
+        });
+        const label = createSvgElement("text", {
+          x: padding.left - 10,
+          y: yPosition + 4,
+          "text-anchor": "end",
+          class: "distrowatch-chart-label",
+        });
+        label.textContent = value.toLocaleString("es-CO");
+        chart.append(gridLine, label);
+      }
+
+      entries.forEach((entry, index) => {
+        const barHeight = baseline - y(entry.pageHitsPerDay);
+        const barX = padding.left + index * barStep + (barStep - barWidth) / 2;
+        const bar = createSvgElement("rect", {
+          x: barX,
+          y: baseline - barHeight,
+          width: barWidth,
+          height: barHeight,
+          rx: 4,
+          class: "distrowatch-chart-bar",
+        });
+        const barTitle = createSvgElement("title");
+        barTitle.textContent = `${entry.date}: ${entry.pageHitsPerDay} visitas diarias; ranking de popularidad ${entry.popularityRank}`;
+        bar.append(barTitle);
+
+        const periodLabel = createSvgElement("text", {
+          x: barX + barWidth / 2,
+          y: height - 16,
+          "text-anchor": "middle",
+          class: "distrowatch-chart-label",
+        });
+        const [, month, day] = entry.date.split("-");
+        periodLabel.textContent = `${day}/${month}`;
+        chart.append(bar, periodLabel);
+      });
+
+      const periodLabel = period === "365" ? "12 meses" : `${period} días`;
+      chartNote.textContent = entries.length
+        ? `${entries.length} ${entries.length === 1 ? "captura verificada" : "capturas verificadas"} en los últimos ${periodLabel}`
+        : `Sin capturas verificadas en los últimos ${periodLabel}`;
+    }
+
+    periodControls.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-period]");
+      if (!button || !periodControls.contains(button)) return;
+      periodControls.querySelectorAll("button[data-period]").forEach((periodButton) => {
+        periodButton.setAttribute("aria-pressed", periodButton === button ? "true" : "false");
+      });
+      renderChart(button.dataset.period);
+    });
+
+    fetch("data/distrowatch.json", { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data) => {
+        if (
+          !data ||
+          !Array.isArray(data.history) ||
+          !data.history.length ||
+          !data.history.every((entry) =>
+            /^\d{4}-\d{2}-\d{2}$/.test(entry.date) &&
+            /^\d{4}-\d{2}-\d{2}$/.test(entry.listingUpdatedAt) &&
+            Number.isInteger(entry.popularityRank) &&
+            entry.popularityRank > 0 &&
+            Number.isInteger(entry.pageHitsPerDay) &&
+            entry.pageHitsPerDay >= 0,
+          )
+        ) {
+          throw new Error("Formato de datos inválido");
+        }
+
+        history = [...data.history].sort((left, right) => left.date.localeCompare(right.date));
+        const latest = history[history.length - 1];
+        setMetric("rank", `#${latest.popularityRank}`);
+        setMetric("page-hits", latest.pageHitsPerDay.toLocaleString("es-CO"));
+        setMetric("updated", new Date(`${latest.date}T00:00:00Z`).toLocaleDateString("es-CO", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          timeZone: "UTC",
+        }));
+        setMetric("listing", new Date(`${latest.listingUpdatedAt}T00:00:00Z`).toLocaleDateString("es-CO", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          timeZone: "UTC",
+        }));
+        chartNote.textContent = "Datos verificados · actualizando gráfico…";
+        renderChart(activePeriod);
+      })
+      .catch((error) => {
+        console.error("No se pudieron cargar las estadísticas de DistroWatch:", error);
+        status.lastChild.textContent = " Datos no disponibles";
+        status.classList.add("is-error");
+        chartNote.textContent = "No se pudieron cargar los datos. Comprueba el archivo data/distrowatch.json.";
+      });
+
+    window.addEventListener("resize", () => {
+      if (history.length) renderChart(activePeriod);
+    }, { passive: true });
+  }
+
   document.addEventListener("click", (e) => {
     const menuBtn = e.target.closest("[data-aw-toggle-menu]");
     if (menuBtn) {
@@ -379,6 +541,7 @@
       initDonationMenu();
       initEditionSwitch();
       initVersionHistory();
+      initDistroWatchStats();
     });
   } else {
     initUI();
@@ -388,5 +551,6 @@
     initDonationMenu();
     initEditionSwitch();
     initVersionHistory();
+    initDistroWatchStats();
   }
 })();
