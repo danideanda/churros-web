@@ -191,8 +191,8 @@
   }
 
   const VERSION_FEEDS = [
-    { edition: "niri", label: "Niri", feed: "https://download.churroslinux.org/updates_ISO/NIRI/update.json" },
-    { edition: "xfce", label: "XFCE", feed: "https://download.churroslinux.org/updates_ISO/XFCE/update.json" },
+    { edition: "niri", label: "Niri", feed: "data/releases-niri.json" },
+    { edition: "xfce", label: "XFCE", feed: "data/releases-xfce.json" },
   ];
 
   const escapeHtml = (value) =>
@@ -286,7 +286,7 @@
     `;
   };
 
-  async function loadEditionReleases(feed) {
+  async function readEditionReleases(feed) {
     const response = await fetch(feed, { cache: "no-store" });
 
     if (!response.ok) {
@@ -322,7 +322,7 @@
         if (!container) return;
 
         try {
-          const releases = await loadEditionReleases(feed);
+          const releases = await readEditionReleases(feed);
           container.innerHTML = releases.map((release) => renderReleaseCard(release, { edition, label })).join("");
         } catch (err) {
           console.warn(`Version history load failed for ${edition}:`, err);

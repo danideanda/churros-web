@@ -1,0 +1,26 @@
+[
+  {
+    "version": "1.0",
+    "date": "2026-08-24",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.08.31-x86_64-1.0-xfce.iso",
+      "torrent": ""
+    }
+  },
+  {
+    "version": "1.1",
+    "date": "2026-09-17",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.09.17-x86_64-xfce-1.1.iso",
+      "torrent": ""
+    }
+  },
+  {
+    "version": "1.2",
+    "date": "2026-09-24",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.09.24-x86_64-xfce-1.2.iso",
+      "torrent": ""
+    }
+  }
+]

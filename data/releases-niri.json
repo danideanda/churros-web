@@ -1,0 +1,58 @@
+[
+  {
+    "version": "0.1",
+    "date": "2026-07-23",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.07.23-x86_64-v0.1.iso",
+      "torrent": ""
+    }
+  },
+  {
+    "version": "0.4",
+    "date": "2026-08-10",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.08.10-x86_64-v0.4.iso",
+      "torrent": ""
+    }
+  },
+  {
+    "version": "0.6",
+    "date": "2026-08-14",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.08.14-x86_64-v0.6.iso",
+      "torrent": ""
+    }
+  },
+  {
+    "version": "0.7",
+    "date": "2026-08-17",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.08.17-x86_64-v0.7.iso",
+      "torrent": "https://download.churroslinux.org/ChurrOS-2026.08.17-x86_64-v0.7.iso.torrent"
+    }
+  },
+  {
+    "version": "1.0",
+    "date": "2026-08-24",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso",
+      "torrent": "https://download.churroslinux.org/ChurrOS-2026.08.24-x86_64-v1.0.iso.torrent"
+    }
+  },
+  {
+    "version": "1.1",
+    "date": "2026-09-17",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.09.17-x86_64-niri-1.1.iso",
+      "torrent": ""
+    }
+  },
+  {
+    "version": "1.2",
+    "date": "2026-09-24",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.09.24-x86_64-niri-1.2.iso",
+      "torrent": ""
+    }
+  }
+]
