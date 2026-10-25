@@ -1,6 +1,6 @@
-const { SOURCE_URL, fetchDistroWatch } = require("../lib/distrowatch");
+import { SOURCE_URL, fetchDistroWatch } from "../lib/distrowatch.js";
 
-module.exports = async function handler(request, response) {
+export default async function handler(request, response) {
   if (request.method !== "GET" && request.method !== "HEAD") {
     response.setHeader("Allow", "GET, HEAD");
     response.status(405).json({ error: "Método no permitido" });

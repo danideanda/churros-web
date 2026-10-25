@@ -16,7 +16,7 @@ Ficha consultada: <https://distrowatch.com/table.php?distribution=churros>
 3. `js/app.js` carga el historial local y luego consulta `/api/distrowatch`. Si la respuesta es valida, actualiza las metricas, agrega la captura del dia al grafico y muestra el estado `Datos en vivo`.
 4. Si `/api/distrowatch` no esta disponible (por ejemplo con Live Server en local), la seccion sigue mostrando el historial de `data/distrowatch.json`.
 
-No se necesita ninguna dependencia de Node: el parser usa expresiones regulares sobre el HTML de DistroWatch.
+No se necesita ninguna dependencia adicional de Node: el parser usa expresiones regulares sobre el HTML de DistroWatch y el Markdown del lector de respaldo. DistroWatch puede bloquear la petición HTML directa (por ejemplo, con HTTP 403); el respaldo es parte normal del flujo, no un caso excepcional.
 
 ## Historial automatico
 
@@ -56,6 +56,8 @@ node scripts/update-distrowatch.js
 `history` debe estar ordenado cronologicamente. El navegador valida fechas e enteros antes de graficar. Si no hay datos locales ni respuesta del API, las metricas quedan en `--` y la seccion muestra `Datos no disponibles`.
 
 ## Prueba local
+
+Ejecuta `npm test` para verificar el parser HTML, el formato Markdown actual de DistroWatch, la extracción de ranking/visitas/períodos/valoración y el fallback tras un HTTP 403.
 
 El endpoint `/api` solo existe cuando el sitio corre en Vercel o con `vercel dev`. Con Live Server u otro servidor estatico, la web cae automaticamente al JSON local. Para probar el parser sin desplegar:
 

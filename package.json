@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server/index.js",
     "test": "node --test",
-    "check": "node --check server/index.js && node --check server/app.js && node --check server/wiki-service.js && node --check js/app.js && node --check js/wiki.js && node --check js/wiki-core.js && bash -n scripts/import-wiki-content.sh",
+    "check": "node --check server/index.js && node --check server/app.js && node --check server/wiki-service.js && node --check api/distrowatch.js && node --check lib/distrowatch.js && node --check scripts/update-distrowatch.js && node --check js/app.js && node --check js/wiki.js && node --check js/wiki-core.js && bash -n scripts/import-wiki-content.sh",
     "check:config": "node --env-file=.env.example server/check-config.js",
     "import:wiki": "bash scripts/import-wiki-content.sh"
   }

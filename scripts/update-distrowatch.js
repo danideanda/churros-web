@@ -1,7 +1,9 @@
-const fs = require("node:fs");
-const path = require("node:path");
-const { SOURCE_URL, fetchDistroWatch } = require("../lib/distrowatch");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { SOURCE_URL, fetchDistroWatch } from "../lib/distrowatch.js";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_PATH = path.join(__dirname, "..", "data", "distrowatch.json");
 
 function readDataset() {
