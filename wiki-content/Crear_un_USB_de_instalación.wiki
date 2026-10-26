@@ -12,7 +12,7 @@ Para instalar ChurrOS necesitas escribir la ISO en un USB. El proceso borra todo
 <pre>
 lsblk
 sudo umount /dev/sdX*
-sudo dd if=ChurrOS-2026.10.12-x86_64-Niri-1.3.iso of=/dev/sdX bs=4M status=progress oflag=sync
+sudo dd if=ChurrOS-2026.10.26-x86_64-niri-1.4.iso of=/dev/sdX bs=4M status=progress oflag=sync
 sync
 </pre>
 

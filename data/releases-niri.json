@@ -62,5 +62,13 @@
       "ISO": "https://download.churroslinux.org/ChurrOS-2026.10.12-x86_64-Niri-1.3.iso",
       "torrent": ""
     }
+  },
+  {
+    "version": "1.4",
+    "date": "2026-10-26",
+    "url": {
+      "ISO": "https://download.churroslinux.org/ChurrOS-2026.10.26-x86_64-niri-1.4.iso",
+      "torrent": ""
+    }
   }
 ]

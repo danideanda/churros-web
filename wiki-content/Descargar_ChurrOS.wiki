@@ -2,18 +2,18 @@ Las imágenes oficiales se publican en [https://download.churroslinux.org downlo
 
 * [https://www.churroslinux.org/download.html Página oficial de descargas]
 
-== Versión actual: 1.3 ==
-La versión '''1.3''' se publicó el '''12 de octubre de 2026'''.
+== Versión actual: 1.4 ==
+La versión '''1.4''' se publicó el '''26 de octubre de 2026'''.
 
 === Niri Edition ===
 La edición predeterminada, con Niri sobre Wayland.
 
-[https://download.churroslinux.org/ChurrOS-2026.10.12-x86_64-Niri-1.3.iso Descargar ChurrOS 1.3 Niri (ISO)]
+[https://download.churroslinux.org/ChurrOS-2026.10.26-x86_64-niri-1.4.iso Descargar ChurrOS 1.4 Niri (ISO)]
 
 === XFCE Edition ===
 La edición con escritorio tradicional XFCE sobre X11.
 
-[https://download.churroslinux.org/ChurrOS-2026.10.12-x86_64-Xfce-1,3.iso Descargar ChurrOS 1.3 XFCE (ISO)]
+[https://download.churroslinux.org/ChurrOS-2026.10.26-x86_64-xfce-1.4.iso Descargar ChurrOS 1.4 XFCE (ISO)]
 
 === Server Edition ===
 La edición Server se construye desde el código fuente con <code>./churros build --edition server</code> y no aparece como descarga directa en la página principal. Instala un sistema sin escritorio, accesible por SSH. Consulta [[Ediciones de ChurrOS]] y [[Edición Server]].
@@ -30,7 +30,7 @@ Descarga siempre desde el dominio oficial. Si la descarga se interrumpe, vuelve 
 Puedes comprobar la integridad de la imagen arrancándola en modo live antes de instalar. Si el proyecto publica un archivo de sumas junto a la ISO, verifícalo con:
 
 <pre>
-sha256sum ChurrOS-2026.10.12-x86_64-Niri-1.3.iso
+sha256sum ChurrOS-2026.10.26-x86_64-niri-1.4.iso
 </pre>
 
 Compara el resultado con la suma publicada. No instales desde una imagen que no coincida.
