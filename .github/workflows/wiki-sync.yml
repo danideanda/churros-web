@@ -1,0 +1,65 @@
+name: Sincronizar GitHub Wiki
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [wiki_updated]
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/wiki-sync.yml"
+      - "scripts/build-github-wiki.mjs"
+      - "scripts/github-wiki-core.mjs"
+      - "scripts/sync-github-wiki.sh"
+      - "tests/github-wiki-core.test.js"
+      - "tests/wiki-stable-content.test.js"
+      - "tests/wiki-static.test.js"
+      - "tests/wiki-sync.test.js"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wiki-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio web
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Generar índice desde GitHub Wiki
+        run: bash scripts/sync-github-wiki.sh wiki-data/wiki.json
+
+      - name: Verificar sitio y contenido
+        run: |
+          npm test
+          npm run check
+
+      - name: Publicar índice actualizado
+        run: |
+          if git diff --quiet -- wiki-data/wiki.json; then
+            echo "La wiki web ya estaba actualizada."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add wiki-data/wiki.json
+          git commit -m "docs: sincronizar GitHub Wiki"
+          git pull --rebase --autostash
+          git push
