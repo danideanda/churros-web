@@ -258,6 +258,14 @@ function renderArticle(article) {
   ]);
   const prose = element("div", { class: "wiki-prose" });
   prose.append(sanitizeFragment(article.html));
+  prose.querySelector(":scope > h1")?.remove();
+  prose.querySelector(":scope > p:has(img[alt*='Logo'])")?.remove();
+  for (const paragraph of prose.querySelectorAll(":scope > p")) {
+    if (normalize(paragraph.textContent) === normalize(article.summary)) {
+      paragraph.remove();
+      break;
+    }
+  }
 
   const flat = state.data.chapters.flatMap((item) => item.articles.map((reference) => findArticle(reference.slug))).filter(Boolean);
   const position = flat.findIndex((item) => item.slug === article.slug);
@@ -379,6 +387,11 @@ document.getElementById("wiki-search-close").addEventListener("click", () => sea
 document.getElementById("wiki-search").addEventListener("submit", (event) => event.preventDefault());
 searchInput.addEventListener("input", updateSearch);
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && searchDialog.open) {
+    event.preventDefault();
+    searchDialog.close();
+    return;
+  }
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
     event.preventDefault();
     openSearch();
