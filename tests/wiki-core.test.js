@@ -4,11 +4,13 @@ import test from "node:test";
 import {
   articleHref,
   attributeIsSafe,
+  chapterHref,
   elementIsAllowed,
   normalizeHistory,
   normalizeRoute,
   normalizeSearchResults,
   rewriteWikiHref,
+  searchWikiIndex,
 } from "../js/wiki-core.js";
 
 test("normalizeRoute recognizes article, category, recent, history, diff, and edit views", () => {
@@ -19,12 +21,18 @@ test("normalizeRoute recognizes article, category, recent, history, diff, and ed
   assert.deepEqual(normalizeRoute("?view=history&article=Gu%C3%ADa"), { view: "history", title: "Guía" });
   assert.deepEqual(normalizeRoute("?view=diff&article=Gu%C3%ADa&from=10&to=11"), { view: "diff", title: "Guía", from: 10, to: 11 });
   assert.deepEqual(normalizeRoute("?view=edit&article=Nueva"), { view: "edit", title: "Nueva" });
+  assert.deepEqual(normalizeRoute("?view=chapter&chapter=primeros-pasos"), { view: "chapter", chapter: "primeros-pasos" });
   assert.deepEqual(normalizeRoute(""), { view: "home" });
 });
 
 test("normalizeRoute falls back safely for malformed revisions and overlong titles", () => {
   assert.deepEqual(normalizeRoute("?view=diff&from=bad&to=-1"), { view: "home" });
   assert.deepEqual(normalizeRoute(`?article=${"x".repeat(200)}`), { view: "home" });
+  assert.deepEqual(normalizeRoute("?view=chapter&chapter=../privado"), { view: "home" });
+});
+
+test("chapterHref builds a stable chapter route", () => {
+  assert.equal(chapterHref("primeros-pasos"), "wiki.html?view=chapter&chapter=primeros-pasos");
 });
 
 test("articleHref encodes titles without producing executable URLs", () => {
@@ -71,4 +79,36 @@ test("search and history view models tolerate missing optional fields", () => {
       { revisionId: 3, parentRevisionId: null, user: "Usuario oculto", timestamp: null, comment: "Sin resumen", size: 0, minor: false },
     ],
   });
+});
+
+test("searchWikiIndex is accent-insensitive, ranks titles first, and returns plain snippets", () => {
+  const index = [
+    {
+      title: "Conexión Wi-Fi",
+      slug: "conexion-wifi",
+      chapter: "Uso diario",
+      text: "Conecta el equipo a una red inalámbrica desde el panel.",
+    },
+    {
+      title: "Diagnóstico rápido",
+      slug: "diagnostico-rapido",
+      chapter: "Solución de problemas",
+      text: "Si falla la conexión wifi, revisa NetworkManager. <img src=x onerror=alert(1)>",
+    },
+  ];
+
+  assert.deepEqual(searchWikiIndex(index, "conexion wifi"), [
+    {
+      title: "Conexión Wi-Fi",
+      slug: "conexion-wifi",
+      chapter: "Uso diario",
+      snippet: "Conecta el equipo a una red inalámbrica desde el panel.",
+    },
+    {
+      title: "Diagnóstico rápido",
+      slug: "diagnostico-rapido",
+      chapter: "Solución de problemas",
+      snippet: "Si falla la conexión wifi, revisa NetworkManager. img src=x onerror=alert(1)",
+    },
+  ]);
 });

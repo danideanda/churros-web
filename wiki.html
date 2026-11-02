@@ -60,59 +60,84 @@
       </div>
     </header>
 
-    <main class="wiki-page">
+    <main class="wiki-page" id="wiki-main">
       <section class="wiki-masthead" aria-labelledby="wiki-title">
         <div class="wiki-masthead-copy">
-          <a class="wiki-wordmark" href="wiki.html" data-wiki-nav>Wiki ChurrOS</a>
-          <h1 id="wiki-title">Encuentra la respuesta. Mejora la guía.</h1>
-          <p>Documentación comunitaria sobre instalación, uso y solución de problemas.</p>
+          <a class="wiki-wordmark" href="wiki.html" data-wiki-nav><img src="img/logo.churros.png" alt="" width="40" height="40" />Wiki ChurrOS</a>
+          <h1 id="wiki-title">Tu ruta por ChurrOS.</h1>
+          <p>El manual completo de ChurrOS 1.4: instala, aprende, personaliza y recupera tu sistema.</p>
         </div>
-        <form class="wiki-search" id="wiki-search" role="search">
-          <label for="wiki-search-input">Buscar en la wiki</label>
-          <div class="wiki-search-control">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-            <input id="wiki-search-input" name="q" type="search" minlength="2" maxlength="200" autocomplete="off" enterkeyhint="search" placeholder="Ej. instalar ChurrOS, Wi-Fi, Niri…" />
-            <button type="submit">Buscar</button>
-          </div>
-        </form>
+        <button class="wiki-search-launcher" id="wiki-search-launcher" type="button" aria-haspopup="dialog">
+          <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>Buscar en 57 artículos…</span>
+          <kbd>Ctrl K</kbd>
+        </button>
       </section>
 
       <div class="wiki-layout">
-        <aside class="wiki-rail" aria-label="Secciones de la wiki">
-          <nav>
-            <a href="wiki.html" data-wiki-nav data-view="home"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9H5v-9Z"/><path d="M9 20v-6h6v6"/></svg>Inicio</a>
-            <a href="wiki.html?view=recent" data-wiki-nav data-view="recent"><svg viewBox="0 0 24 24"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>Recientes</a>
-            <button type="button" id="wiki-categories-button"><svg viewBox="0 0 24 24"><path d="M4 5h6l2 2h8v12H4Z"/></svg>Categorías</button>
+        <aside class="wiki-rail" aria-label="Navegación de la wiki">
+          <div class="wiki-rail-heading">
+            <span>Manual 1.4</span>
+            <button type="button" id="wiki-chapter-toggle" aria-label="Abrir capítulos" aria-expanded="false" aria-controls="wiki-chapter-navigation">Capítulos</button>
+          </div>
+          <nav id="wiki-chapter-navigation" aria-label="Capítulos de la wiki">
+            <a href="wiki.html" data-wiki-nav data-view="home"><span class="wiki-route-number">00</span>Mapa de la wiki</a>
+            <div id="wiki-chapter-list"></div>
           </nav>
-          <div class="wiki-session" id="wiki-session" aria-live="polite">
-            <span id="wiki-session-label">Comprobando acceso…</span>
-            <button type="button" id="wiki-auth-button" hidden>Iniciar sesión</button>
+          <div class="wiki-source-card">
+            <strong>Fuente abierta</strong>
+            <span id="wiki-source-status">Cargando versión…</span>
+            <a href="https://github.com/ChurrOS-GNU-Linux/ChurrOS/wiki" target="_blank" rel="noopener noreferrer">Abrir GitHub Wiki</a>
           </div>
         </aside>
 
         <section class="wiki-workspace" aria-live="polite" aria-busy="true">
           <div class="wiki-toolbar" id="wiki-toolbar" hidden>
-            <div class="wiki-breadcrumb" id="wiki-breadcrumb"></div>
+            <nav class="wiki-breadcrumb" id="wiki-breadcrumb" aria-label="Migas de pan"></nav>
             <div class="wiki-actions">
-              <button type="button" id="wiki-history-button">Historial</button>
-              <button type="button" class="wiki-primary-action" id="wiki-edit-button" hidden>Editar</button>
+              <button type="button" id="wiki-copy-link">Copiar enlace</button>
+              <a id="wiki-edit-link" href="https://github.com/ChurrOS-GNU-Linux/ChurrOS/wiki" target="_blank" rel="noopener noreferrer">Editar en GitHub</a>
             </div>
           </div>
           <div class="wiki-notice" id="wiki-notice" hidden role="status"></div>
-          <div id="wiki-content">
+          <article id="wiki-content">
             <div class="wiki-loading" aria-label="Cargando contenido">
               <span></span><span></span><span></span><span></span>
             </div>
-          </div>
+          </article>
         </section>
 
-        <aside class="wiki-context" id="wiki-context" aria-label="Contenido relacionado" hidden></aside>
+        <aside class="wiki-context" id="wiki-context" aria-label="En esta página" hidden>
+          <nav id="wiki-article-toc" aria-label="Tabla de contenidos"></nav>
+          <div id="wiki-related"></div>
+        </aside>
       </div>
+
+      <noscript>
+        <p class="wiki-noscript">Necesitas JavaScript para usar el buscador y la navegación dinámica. También puedes consultar toda la documentación en <a href="https://github.com/ChurrOS-GNU-Linux/ChurrOS/wiki">GitHub Wiki</a>.</p>
+      </noscript>
     </main>
 
+    <dialog class="wiki-search-dialog" id="wiki-search-dialog" aria-labelledby="wiki-search-dialog-title">
+      <div class="wiki-search-dialog-header">
+        <div>
+          <h2 id="wiki-search-dialog-title">Buscar en la wiki</h2>
+          <p>Busca por título, capítulo o contenido.</p>
+        </div>
+        <button type="button" id="wiki-search-close" aria-label="Cerrar búsqueda">Cerrar</button>
+      </div>
+      <form id="wiki-search" role="search">
+        <label for="wiki-search-input">¿Qué necesitas resolver?</label>
+        <div class="wiki-search-control">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="wiki-search-input" name="q" type="search" maxlength="200" autocomplete="off" enterkeyhint="search" placeholder="Ej. Wi-Fi, instalar ChurrOS, recuperar GRUB…" />
+        </div>
+      </form>
+      <div id="wiki-search-results" aria-live="polite"></div>
+    </dialog>
+
     <footer class="wiki-footer">
-      <div><a href="/">ChurrOS</a><span>Documentación abierta, impulsada por MediaWiki.</span></div>
-      <a href="https://github.com/Hoyuse/ChurrOS/">Código en GitHub</a>
+      <div><a href="/">ChurrOS</a><span>Documentación estable de ChurrOS 1.4.</span></div>
+      <a href="https://github.com/ChurrOS-GNU-Linux/ChurrOS/">Código en GitHub</a>
     </footer>
 
     <script src="js/app.js"></script>

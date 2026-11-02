@@ -1,48 +1,34 @@
 import {
   articleHref,
   attributeIsSafe,
+  chapterHref,
   elementIsAllowed,
-  normalizeHistory,
   normalizeRoute,
-  normalizeSearchResults,
   rewriteWikiHref,
+  searchWikiIndex,
 } from "./wiki-core.js";
 
-const API = "/api/wiki";
-const MEDIAWIKI_BASE = `${location.origin}/wiki/index.php`;
-const state = { auth: { authenticated: false, canEdit: false, canCreate: false, oauthEnabled: false }, route: null };
+const DATA_URL = "wiki-data/wiki.json";
+const WIKI_BASE = "https://github.com/ChurrOS-GNU-Linux/ChurrOS/wiki";
+const state = { data: null, route: null };
 
 const content = document.getElementById("wiki-content");
 const workspace = document.querySelector(".wiki-workspace");
 const toolbar = document.getElementById("wiki-toolbar");
 const breadcrumb = document.getElementById("wiki-breadcrumb");
-const context = document.getElementById("wiki-context");
-const editButton = document.getElementById("wiki-edit-button");
-const historyButton = document.getElementById("wiki-history-button");
 const notice = document.getElementById("wiki-notice");
-const authButton = document.getElementById("wiki-auth-button");
-const sessionLabel = document.getElementById("wiki-session-label");
-
-class ApiError extends Error {
-  constructor(status, payload) {
-    super(payload?.error?.message || "No fue posible completar la solicitud.");
-    this.status = status;
-    this.code = payload?.error?.code || "request_failed";
-    this.requestId = payload?.error?.requestId || null;
-  }
-}
-
-async function api(path, options = {}) {
-  const response = await fetch(`${API}${path}`, {
-    credentials: "same-origin",
-    headers: { accept: "application/json", ...(options.body ? { "content-type": "application/json" } : {}) },
-    ...options,
-  });
-  let payload;
-  try { payload = await response.json(); } catch { payload = {}; }
-  if (!response.ok) throw new ApiError(response.status, payload);
-  return payload;
-}
+const context = document.getElementById("wiki-context");
+const toc = document.getElementById("wiki-article-toc");
+const related = document.getElementById("wiki-related");
+const editLink = document.getElementById("wiki-edit-link");
+const copyLink = document.getElementById("wiki-copy-link");
+const chapterList = document.getElementById("wiki-chapter-list");
+const chapterNavigation = document.getElementById("wiki-chapter-navigation");
+const chapterToggle = document.getElementById("wiki-chapter-toggle");
+const sourceStatus = document.getElementById("wiki-source-status");
+const searchDialog = document.getElementById("wiki-search-dialog");
+const searchInput = document.getElementById("wiki-search-input");
+const searchResults = document.getElementById("wiki-search-results");
 
 function element(tag, attributes = {}, children = []) {
   const node = document.createElement(tag);
@@ -56,6 +42,35 @@ function element(tag, attributes = {}, children = []) {
   return node;
 }
 
+function normalize(value) {
+  return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replaceAll("_", " ").replace(/[^a-zA-Z0-9]+/g, " ").trim().toLowerCase();
+}
+
+function findArticle(reference) {
+  if (!state.data) return null;
+  const direct = state.data.articles[String(reference || "")];
+  if (direct) return direct;
+  const key = normalize(reference);
+  return Object.values(state.data.articles).find((article) => normalize(article.title) === key || normalize(article.slug) === key) || null;
+}
+
+function findChapter(reference) {
+  const key = normalize(reference);
+  return state.data?.chapters.find((chapter) => normalize(chapter.slug) === key || normalize(chapter.title) === key) || null;
+}
+
+async function loadData() {
+  const response = await fetch(DATA_URL, { headers: { accept: "application/json" } });
+  if (!response.ok) throw new Error("No se pudo descargar el índice de la wiki.");
+  const data = await response.json();
+  if (data?.schemaVersion !== 1 || !data.articles?.[data.mainPage] || !Array.isArray(data.chapters)) {
+    throw new Error("El índice de la wiki tiene un formato no compatible.");
+  }
+  state.data = data;
+  return data;
+}
+
 function loading() {
   workspace.setAttribute("aria-busy", "true");
   toolbar.hidden = true;
@@ -65,20 +80,20 @@ function loading() {
   ]));
 }
 
+function finish() {
+  workspace.setAttribute("aria-busy", "false");
+  markCurrentNavigation();
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
 function setNotice(message, kind = "info") {
   notice.hidden = !message;
   notice.dataset.kind = kind;
   notice.textContent = message || "";
 }
 
-function finish() {
-  workspace.setAttribute("aria-busy", "false");
-  markCurrentRail();
-}
-
-function sanitizeFragment(html, { diff = false } = {}) {
-  const source = diff ? `<table><tbody>${html}</tbody></table>` : `<div>${html}</div>`;
-  const parsed = new DOMParser().parseFromString(source, "text/html");
+function sanitizeFragment(html) {
+  const parsed = new DOMParser().parseFromString(`<div>${String(html || "")}</div>`, "text/html");
   parsed.querySelectorAll("*").forEach((node) => {
     if (!elementIsAllowed(node.localName) || node.namespaceURI !== "http://www.w3.org/1999/xhtml") {
       node.remove();
@@ -88,7 +103,7 @@ function sanitizeFragment(html, { diff = false } = {}) {
       if (!attributeIsSafe(attribute.name, attribute.value)) node.removeAttribute(attribute.name);
     }
     if (node instanceof HTMLAnchorElement && node.hasAttribute("href")) {
-      const rewritten = rewriteWikiHref(node.getAttribute("href"), MEDIAWIKI_BASE);
+      const rewritten = rewriteWikiHref(node.getAttribute("href"), `${location.origin}/wiki/index.php`);
       if (!rewritten) node.removeAttribute("href");
       else {
         node.setAttribute("href", rewritten);
@@ -102,10 +117,11 @@ function sanitizeFragment(html, { diff = false } = {}) {
     if (node instanceof HTMLImageElement) {
       node.loading = "lazy";
       node.decoding = "async";
+      if (!node.width && !node.height) node.classList.add("wiki-content-image");
     }
   });
-  const root = diff ? parsed.querySelector("table") : parsed.body.firstElementChild;
   const fragment = document.createDocumentFragment();
+  const root = parsed.body.firstElementChild;
   while (root?.firstChild) fragment.append(root.firstChild);
   return fragment;
 }
@@ -113,12 +129,8 @@ function sanitizeFragment(html, { diff = false } = {}) {
 function routeUrl(route) {
   if (route.view === "home") return "wiki.html";
   if (route.view === "article") return articleHref(route.title);
-  const params = new URLSearchParams({ view: route.view });
-  if (route.title) params.set("article", route.title);
-  if (route.category) params.set("category", route.category);
-  if (route.from) params.set("from", route.from);
-  if (route.to) params.set("to", route.to);
-  return `wiki.html?${params}`;
+  if (route.view === "chapter") return chapterHref(route.chapter);
+  return `wiki.html?${new URLSearchParams({ view: route.view })}`;
 }
 
 function navigate(route, { replace = false } = {}) {
@@ -127,282 +139,189 @@ function navigate(route, { replace = false } = {}) {
   renderRoute();
 }
 
-function setToolbar(title, { canEdit = false, history = false } = {}) {
+function setToolbar(items, article = null) {
   toolbar.hidden = false;
-  breadcrumb.replaceChildren(element("span", { text: "Wiki / " }), element("strong", { text: title }));
-  editButton.hidden = !(canEdit && state.auth.canEdit);
-  historyButton.hidden = !history;
-  editButton.onclick = () => navigate({ view: "edit", title });
-  historyButton.onclick = () => navigate({ view: "history", title });
+  breadcrumb.replaceChildren(element("a", { href: "wiki.html", "data-wiki-nav": "", text: "Wiki" }));
+  for (const item of items) {
+    breadcrumb.append(element("span", { "aria-hidden": "true", text: "/" }));
+    breadcrumb.append(item.href
+      ? element("a", { href: item.href, "data-wiki-nav": "", text: item.label })
+      : element("strong", { text: item.label }));
+  }
+  editLink.href = article?.editUrl || WIKI_BASE;
+  editLink.textContent = article ? "Editar en GitHub" : "Ver GitHub Wiki";
 }
 
-function categoryHref(category) {
-  return routeUrl({ view: "category", category });
+function renderChapterNavigation() {
+  chapterList.replaceChildren();
+  state.data.chapters.forEach((chapter, index) => {
+    chapterList.append(element("a", {
+      href: chapterHref(chapter.slug), "data-wiki-nav": "", "data-chapter": chapter.slug,
+    }, [
+      element("span", { class: "wiki-route-number", text: String(index + 1).padStart(2, "0") }),
+      element("span", { text: chapter.title }),
+      element("small", { text: String(chapter.articles.length) }),
+    ]));
+  });
 }
 
-function renderArticle(article, { home = false } = {}) {
-  setToolbar(article.title, { canEdit: true, history: true });
+function chapterCard(chapter, index) {
+  const firstArticle = findArticle(chapter.articles[0]?.slug);
+  return element("a", { class: "wiki-route-card", href: chapterHref(chapter.slug), "data-wiki-nav": "" }, [
+    element("span", { class: "wiki-route-card-number", text: String(index + 1).padStart(2, "0") }),
+    element("div", {}, [
+      element("h2", { text: chapter.title }),
+      element("p", { text: firstArticle?.summary || `${chapter.articles.length} artículos para recorrer este tema.` }),
+      element("span", { class: "wiki-route-card-meta", text: `${chapter.articles.length} artículos →` }),
+    ]),
+  ]);
+}
+
+function renderHome() {
+  setToolbar([{ label: "Mapa de la wiki" }]);
+  const root = element("div", { class: "wiki-home" });
+  root.append(element("header", { class: "wiki-page-heading" }, [
+    element("span", { class: "wiki-kicker", text: `Manual oficial · ChurrOS ${state.data.version}` }),
+    element("h1", { text: "¿Qué quieres hacer hoy?" }),
+    element("p", { text: "Sigue una ruta completa o salta directamente al artículo que necesitas." }),
+  ]));
+
+  const quick = element("section", { class: "wiki-quick-paths", "aria-label": "Accesos rápidos" });
+  for (const slug of ["descargar-churros", "instalar-churros-paso-a-paso", "recorrido-inicial", "diagnostico-rapido"]) {
+    const article = findArticle(slug);
+    if (article) quick.append(element("a", { href: articleHref(article.title), "data-wiki-nav": "" }, [
+      element("strong", { text: article.title }), element("span", { text: article.summary }),
+    ]));
+  }
+  root.append(quick);
+  root.append(element("div", { class: "wiki-section-rule" }, [
+    element("h2", { text: "Recorre el manual" }),
+    element("span", { text: `${state.data.chapters.length} capítulos · ${state.data.pageCount} artículos` }),
+  ]));
+  const routes = element("div", { class: "wiki-route-map" });
+  state.data.chapters.forEach((chapter, index) => routes.append(chapterCard(chapter, index)));
+  root.append(routes);
+  content.replaceChildren(root);
+  context.hidden = true;
+}
+
+function renderChapter(chapter) {
+  setToolbar([{ label: chapter.title }]);
+  const root = element("div", { class: "wiki-chapter-view" }, element("header", { class: "wiki-page-heading" }, [
+    element("span", { class: "wiki-kicker", text: `Capítulo · ${chapter.articles.length} artículos` }),
+    element("h1", { text: chapter.title }),
+    element("p", { text: "Lee en orden para completar el recorrido o abre solo la respuesta que necesitas." }),
+  ]));
+  const list = element("ol", { class: "wiki-chapter-articles" });
+  chapter.articles.forEach((reference, index) => {
+    const article = findArticle(reference.slug);
+    if (!article) return;
+    list.append(element("li", {}, element("a", { href: articleHref(article.title), "data-wiki-nav": "" }, [
+      element("span", { class: "wiki-article-order", text: String(index + 1).padStart(2, "0") }),
+      element("div", {}, [element("h2", { text: article.title }), element("p", { text: article.summary })]),
+      element("small", { text: `${article.level} · ${article.minutes} min` }),
+    ])));
+  });
+  root.append(list);
+  content.replaceChildren(root);
+  context.hidden = true;
+}
+
+function renderArticleContext(article) {
+  toc.replaceChildren(element("h2", { text: "En esta página" }));
+  const tocList = element("ol");
+  for (const heading of article.headings || []) {
+    tocList.append(element("li", { class: `depth-${heading.depth}` }, element("a", { href: `#${heading.id}`, text: heading.text })));
+  }
+  toc.append(tocList);
+  related.replaceChildren();
+  const titles = (article.related || []).map(findArticle).filter(Boolean).slice(0, 4);
+  if (titles.length) {
+    related.append(element("h2", { text: "Continúa leyendo" }));
+    const list = element("ul");
+    for (const item of titles) list.append(element("li", {}, element("a", { href: articleHref(item.title), "data-wiki-nav": "", text: item.title })));
+    related.append(list);
+  }
+  context.hidden = !(article.headings?.length || titles.length);
+}
+
+function renderArticle(article) {
+  const chapter = findChapter(article.chapter);
+  setToolbar([...(chapter ? [{ label: chapter.title, href: chapterHref(chapter.slug) }] : []), { label: article.title }], article);
   const header = element("header", { class: "wiki-article-header" }, [
+    element("span", { class: "wiki-kicker", text: `${article.chapter} · ${article.level}` }),
     element("h1", { text: article.title }),
-    element("p", { text: article.revisionId ? `Revisión ${article.revisionId}` : "Artículo de la comunidad" }),
+    element("p", { class: "wiki-article-summary", text: article.summary }),
+    element("div", { class: "wiki-article-meta" }, [
+      element("span", { text: `${article.minutes} min de lectura` }), element("span", { text: `ChurrOS ${state.data.version}` }),
+    ]),
   ]);
   const prose = element("div", { class: "wiki-prose" });
   prose.append(sanitizeFragment(article.html));
-  const categories = element("div", { class: "wiki-category-list", "aria-label": "Categorías" });
-  for (const category of article.categories || []) {
-    categories.append(element("a", { href: categoryHref(category), "data-wiki-nav": "", text: category }));
-  }
-  content.replaceChildren(element("article", { class: "wiki-article" }, [header, prose, categories]));
-  renderContext(article.related || [], home ? "También puedes empezar por" : "Páginas relacionadas");
-}
 
-function renderContext(titles, heading) {
-  context.replaceChildren();
-  if (!titles.length) { context.hidden = true; return; }
-  context.append(element("h2", { text: heading }));
-  const list = element("ul");
-  for (const title of titles.slice(0, 10)) list.append(element("li", {}, element("a", { href: articleHref(title), "data-wiki-nav": "", text: title })));
-  context.append(list);
-  context.hidden = false;
-}
-
-function resultItem(item, metadata = null) {
-  const link = element("a", { href: articleHref(item.title), "data-wiki-nav": "", text: item.title });
-  const node = element("article", { class: "wiki-result" }, [link]);
-  if (item.snippet) {
-    const summary = element("p");
-    summary.append(sanitizeFragment(item.snippet));
-    node.append(summary);
-  }
-  if (metadata) node.append(element("p", { text: metadata }));
-  return node;
-}
-
-function indexShell(title, description) {
-  const root = element("div", { class: "wiki-index" });
-  root.append(element("h1", { class: "wiki-view-title", text: title }));
-  if (description) root.append(element("p", { class: "wiki-index-intro", text: description }));
-  return root;
-}
-
-async function renderHome() {
-  const data = await api("/home");
-  setToolbar("Inicio");
-  const root = indexShell("La wiki de ChurrOS", "Guías prácticas escritas y revisadas por la comunidad. MediaWiki conserva cada cambio y ChurrOS te ofrece una lectura clara.");
-  const intro = element("section", { class: "wiki-list-section" });
-  const prose = element("div", { class: "wiki-prose" });
-  prose.append(sanitizeFragment(data.article.html));
-  intro.append(prose);
-  root.append(intro);
-
-  const featured = element("section", { class: "wiki-list-section" }, element("h2", { text: "Artículos destacados" }));
-  const featuredList = element("div", { class: "wiki-link-list" });
-  for (const item of data.featured || []) featuredList.append(element("a", { href: articleHref(item.title), "data-wiki-nav": "", text: item.title }));
-  featured.append(featuredList.children.length ? featuredList : element("p", { text: "Aún no hay artículos en la categoría Destacados." }));
-  root.append(featured);
-
-  const recent = element("section", { class: "wiki-list-section" }, element("h2", { text: "Cambios recientes" }));
-  const recentList = element("div", { class: "wiki-link-list" });
-  for (const item of data.recent || []) {
-    recentList.append(element("a", { href: articleHref(item.title), "data-wiki-nav": "" }, [
-      document.createTextNode(item.title), element("small", { text: formatDate(item.timestamp) }),
-    ]));
-  }
-  recent.append(recentList.children.length ? recentList : element("p", { text: "Todavía no hay cambios recientes." }));
-  root.append(recent);
-
-  const categories = element("section", { class: "wiki-list-section" }, element("h2", { text: "Explorar categorías" }));
-  const categoryList = element("div", { class: "wiki-category-list" });
-  for (const item of data.categories || []) {
-    const name = item["*"] || item.category || item.title;
-    if (name) categoryList.append(element("a", { href: categoryHref(name), "data-wiki-nav": "", text: name }));
-  }
-  categories.append(categoryList.children.length ? categoryList : element("p", { text: "Aún no hay categorías." }));
-  root.append(categories);
-  content.replaceChildren(root);
-  renderContext((data.featured || []).map((item) => item.title), "Lecturas recomendadas");
-}
-
-async function renderSearch(query) {
-  loading();
-  const data = normalizeSearchResults(await api(`/search?q=${encodeURIComponent(query)}&limit=20`));
-  setToolbar(`Resultados para “${query}”`);
-  const root = indexShell(`Resultados para “${query}”`, `${data.length} ${data.length === 1 ? "resultado" : "resultados"}`);
-  const list = element("div", { class: "wiki-result-list" });
-  for (const item of data) list.append(resultItem(item));
-  if (!data.length) root.append(emptyState("No encontramos coincidencias", "Prueba con menos palabras o crea el artículo si tienes permiso.", query));
-  else root.append(list);
-  content.replaceChildren(root);
-  context.hidden = true;
-  finish();
-}
-
-async function renderCategory(category) {
-  const data = await api(`/categories?category=${encodeURIComponent(category)}&limit=50`);
-  setToolbar(category);
-  const members = data.members || [];
-  const root = indexShell(category, `${members.length} ${members.length === 1 ? "artículo" : "artículos"} en esta categoría.`);
-  const list = element("div", { class: "wiki-link-list" });
-  for (const item of members) list.append(element("a", { href: articleHref(item.title), "data-wiki-nav": "" }, [
-    document.createTextNode(item.title), element("small", { text: formatDate(item.timestamp) }),
-  ]));
-  root.append(members.length ? list : emptyState("Categoría vacía", "Todavía no hay artículos en esta categoría."));
-  content.replaceChildren(root);
-}
-
-async function renderCategories() {
-  const data = await api("/categories?limit=50");
-  setToolbar("Categorías");
-  const root = indexShell("Categorías", "Explora la documentación por tema.");
-  const list = element("div", { class: "wiki-link-list" });
-  for (const item of data.categories || []) {
-    const name = item["*"] || item.category;
-    if (!name) continue;
-    list.append(element("a", { href: categoryHref(name), "data-wiki-nav": "" }, [
-      document.createTextNode(name), element("small", { text: `${Number(item.pages) || 0} páginas` }),
-    ]));
-  }
-  root.append(list.children.length ? list : emptyState("Sin categorías", "Las categorías aparecerán cuando los artículos las usen."));
-  content.replaceChildren(root);
-}
-
-async function renderRecent() {
-  const changes = await api("/recent?limit=25");
-  setToolbar("Cambios recientes");
-  const root = indexShell("Cambios recientes", "Las últimas ediciones registradas por MediaWiki.");
-  const list = element("div", { class: "wiki-result-list" });
-  for (const change of changes) list.append(resultItem(change, `${change.user || "Usuario oculto"} · ${formatDate(change.timestamp)}${change.comment ? ` · ${change.comment}` : ""}`));
-  root.append(changes.length ? list : emptyState("Sin cambios recientes", "Las ediciones aparecerán aquí."));
-  content.replaceChildren(root);
-}
-
-async function renderHistory(title) {
-  const data = normalizeHistory(await api(`/history?title=${encodeURIComponent(title)}&limit=50`));
-  setToolbar(`Historial de ${data.title}`, { canEdit: true });
-  const root = indexShell(`Historial de ${data.title}`, "Cada edición se conserva. Compara una revisión con la anterior para ver qué cambió.");
-  const list = element("div", { class: "wiki-history-list" });
-  for (const revision of data.revisions) {
-    const actions = [];
-    if (revision.parentRevisionId) actions.push(element("a", {
-      href: routeUrl({ view: "diff", title: data.title, from: revision.parentRevisionId, to: revision.revisionId }),
-      "data-wiki-nav": "", text: "Ver cambios",
-    }));
-    list.append(element("article", { class: "wiki-result" }, [
-      element("strong", { text: formatDate(revision.timestamp) }),
-      element("p", { text: `${revision.user} · ${revision.comment} · ${revision.size} bytes${revision.minor ? " · edición menor" : ""}` }),
-      ...actions,
-    ]));
-  }
-  root.append(data.revisions.length ? list : emptyState("Sin revisiones", "Este artículo todavía no tiene historial."));
-  content.replaceChildren(root);
-}
-
-async function renderDiff(route) {
-  const data = await api(`/diff?from=${route.from}&to=${route.to}`);
-  setToolbar(`Cambios en ${route.title}`, { history: true });
-  historyButton.onclick = () => navigate({ view: "history", title: route.title });
-  const root = indexShell("Comparación de revisiones", `Cambios entre las revisiones ${data.fromRevisionId} y ${data.toRevisionId}.`);
-  const wrapper = element("div", { class: "wiki-prose" });
-  const table = element("table", { class: "wiki-diff" });
-  table.append(sanitizeFragment(data.html, { diff: true }));
-  wrapper.append(table);
-  root.append(wrapper);
-  content.replaceChildren(root);
-}
-
-async function renderEditor(title) {
-  if (!state.auth.authenticated || !state.auth.canEdit) {
-    throw new ApiError(403, { error: { code: "forbidden", message: "Tu cuenta de MediaWiki no tiene permiso para editar." } });
-  }
-  const source = await api(`/source?title=${encodeURIComponent(title)}`);
-  if (source.missing && !state.auth.canCreate) throw new ApiError(403, { error: { message: "Tu cuenta no puede crear artículos." } });
-  setToolbar(source.missing ? `Crear ${title}` : `Editar ${source.title}`);
-  const form = element("form", { class: "wiki-editor" });
-  form.append(element("h1", { class: "wiki-view-title", text: source.missing ? `Crear ${title}` : `Editar ${source.title}` }));
-  form.append(element("label", { for: "wiki-source", text: "Contenido en wikitext" }));
-  const textarea = element("textarea", { id: "wiki-source", name: "text", required: "", spellcheck: "true" });
-  textarea.value = source.text || "";
-  form.append(textarea);
-  form.append(element("label", { for: "wiki-summary", text: "Resumen de la edición" }));
-  const summary = element("input", { id: "wiki-summary", name: "summary", maxlength: "500", placeholder: "Describe brevemente qué cambió" });
-  const save = element("button", { type: "submit", text: source.missing ? "Crear artículo" : "Guardar cambios" });
-  form.append(summary, element("div", { class: "wiki-editor-footer" }, [
-    element("p", { text: "El formato y el historial los gestiona MediaWiki." }), save,
-  ]));
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    save.disabled = true;
-    save.textContent = "Guardando…";
-    setNotice("");
-    try {
-      await api("/article", {
-        method: "POST",
-        body: JSON.stringify({ title: source.title || title, text: textarea.value, summary: summary.value, baseRevisionId: source.revisionId }),
-      });
-      sessionStorage.setItem("wiki-confirmation", source.missing ? "Artículo creado." : "Cambios guardados.");
-      navigate({ view: "article", title: source.title || title });
-    } catch (error) {
-      setNotice(error.message, "error");
-      save.disabled = false;
-      save.textContent = source.missing ? "Crear artículo" : "Guardar cambios";
-    }
-  });
-  content.replaceChildren(form);
-}
-
-function emptyState(title, message, suggestedTitle = null) {
-  const root = element("div", { class: "wiki-empty" }, [element("h2", { text: title }), element("p", { text: message })]);
-  if (suggestedTitle && state.auth.canCreate) root.append(element("button", {
-    class: "wiki-primary-action", type: "button", text: "Crear artículo", onclick: () => navigate({ view: "edit", title: suggestedTitle }),
-  }));
-  return root;
+  const flat = state.data.chapters.flatMap((item) => item.articles.map((reference) => findArticle(reference.slug))).filter(Boolean);
+  const position = flat.findIndex((item) => item.slug === article.slug);
+  const previous = flat[position - 1];
+  const next = flat[position + 1];
+  const pagination = element("nav", { class: "wiki-pagination", "aria-label": "Navegación entre artículos" });
+  if (previous) pagination.append(element("a", { href: articleHref(previous.title), "data-wiki-nav": "" }, [element("small", { text: "Anterior" }), document.createTextNode(previous.title)]));
+  if (next) pagination.append(element("a", { href: articleHref(next.title), "data-wiki-nav": "" }, [element("small", { text: "Siguiente" }), document.createTextNode(next.title)]));
+  content.replaceChildren(header, prose, pagination);
+  renderArticleContext(article);
 }
 
 function renderError(error, route) {
-  setToolbar("No pudimos abrir esta vista");
-  const isMissing = error.status === 404 && route?.title;
-  const root = element("div", { class: "wiki-error" }, [
-    element("h2", { text: isMissing ? "Este artículo todavía no existe" : "La wiki no respondió" }),
-    element("p", { text: isMissing ? "Puedes buscar otro tema o crear esta página si tienes permiso." : error.message }),
-  ]);
-  if (isMissing && state.auth.canCreate) root.append(element("button", {
-    class: "wiki-primary-action", type: "button", text: "Crear artículo", onclick: () => navigate({ view: "edit", title: route.title }),
-  }));
-  if (!isMissing) root.append(element("button", { type: "button", text: "Intentar de nuevo", onclick: () => renderRoute() }));
-  content.replaceChildren(root);
+  const missing = route?.view === "article";
+  setToolbar([{ label: "No disponible" }]);
+  content.replaceChildren(element("div", { class: "wiki-empty" }, [
+    element("span", { class: "wiki-kicker", text: "No pudimos completar la ruta" }),
+    element("h1", { text: missing ? "Este artículo no existe" : "La wiki no está disponible" }),
+    element("p", { text: missing ? "Revisa el título o vuelve al mapa de la wiki." : `${error.message} Comprueba tu conexión e inténtalo de nuevo.` }),
+    element("button", { type: "button", class: "wiki-primary-action", text: "Volver al inicio", onclick: () => navigate({ view: "home" }) }),
+  ]));
   context.hidden = true;
 }
 
-function formatDate(value) {
-  if (!value) return "Fecha no disponible";
-  const date = new Date(value);
-  return Number.isNaN(date.valueOf()) ? "Fecha no disponible" : new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" }).format(date);
-}
-
-function markCurrentRail() {
-  document.querySelectorAll(".wiki-rail [data-view]").forEach((item) => {
-    const active = item.dataset.view === state.route?.view;
+function markCurrentNavigation() {
+  const currentChapter = state.route?.view === "chapter" ? state.route.chapter
+    : state.route?.view === "article" ? findChapter(findArticle(state.route.title)?.chapter)?.slug : null;
+  document.querySelectorAll("[data-view], [data-chapter]").forEach((item) => {
+    const active = item.dataset.view === state.route?.view || (item.dataset.chapter && item.dataset.chapter === currentChapter);
     if (active) item.setAttribute("aria-current", "page"); else item.removeAttribute("aria-current");
   });
 }
 
+function formatSourceStatus() {
+  const synced = new Date(state.data.syncedAt);
+  const stale = !Number.isNaN(synced.valueOf()) && Date.now() - synced.valueOf() > 1000 * 60 * 60 * 24 * 30;
+  sourceStatus.textContent = stale
+    ? `ChurrOS ${state.data.version} · sincronización pendiente`
+    : `ChurrOS ${state.data.version} · ${state.data.pageCount} páginas`;
+  if (stale) sourceStatus.dataset.stale = "true";
+}
+
 async function renderRoute() {
-  setNotice("");
   loading();
+  setNotice("");
   const route = normalizeRoute(location.search);
   state.route = route;
   try {
-    if (route.view === "home") await renderHome();
-    else if (route.view === "article") renderArticle(await api(`/article?title=${encodeURIComponent(route.title)}`));
-    else if (route.view === "categories") await renderCategories();
-    else if (route.view === "category") await renderCategory(route.category);
-    else if (route.view === "recent") await renderRecent();
-    else if (route.view === "history") await renderHistory(route.title);
-    else if (route.view === "diff") await renderDiff(route);
-    else if (route.view === "edit") await renderEditor(route.title);
-    const confirmation = sessionStorage.getItem("wiki-confirmation");
-    if (confirmation) { sessionStorage.removeItem("wiki-confirmation"); setNotice(confirmation); }
-    document.title = `${route.title || route.category || "Wiki"} — ChurrOS`;
+    if (!state.data) {
+      await loadData();
+      renderChapterNavigation();
+      formatSourceStatus();
+    }
+    if (route.view === "home" || ["categories", "recent"].includes(route.view)) renderHome();
+    else if (route.view === "chapter") {
+      const chapter = findChapter(route.chapter);
+      if (!chapter) throw new Error("El capítulo solicitado no existe.");
+      renderChapter(chapter);
+    } else if (route.view === "article") {
+      const article = findArticle(route.title);
+      if (!article) throw new Error("El artículo solicitado no existe.");
+      renderArticle(article);
+    } else renderHome();
+    document.title = `${route.title || findChapter(route.chapter)?.title || "Wiki"} — ChurrOS`;
   } catch (error) {
     renderError(error, route);
   } finally {
@@ -410,19 +329,39 @@ async function renderRoute() {
   }
 }
 
-async function loadAuth() {
-  try { state.auth = await api("/auth/status"); } catch { state.auth = { authenticated: false, canEdit: false, canCreate: false, oauthEnabled: false }; }
-  if (state.auth.authenticated) {
-    sessionLabel.textContent = `Sesión: ${state.auth.name}`;
-    authButton.hidden = false;
-    authButton.textContent = "Cerrar sesión";
-    authButton.onclick = async () => { await api("/auth/logout", { method: "POST" }); location.reload(); };
-  } else {
-    sessionLabel.textContent = state.auth.oauthEnabled ? "Lectura pública" : "Edición no configurada";
-    authButton.hidden = !state.auth.oauthEnabled;
-    authButton.textContent = "Iniciar sesión";
-    authButton.onclick = () => { location.href = `${API}/auth/login`; };
+function resultNode(result) {
+  return element("a", { class: "wiki-search-result", href: articleHref(result.title), "data-wiki-nav": "" }, [
+    element("span", { class: "wiki-search-result-chapter", text: result.chapter }),
+    element("strong", { text: result.title }),
+    element("p", { text: result.snippet }),
+  ]);
+}
+
+function updateSearch() {
+  const query = searchInput.value.trim();
+  searchResults.replaceChildren();
+  if (query.length < 2) {
+    searchResults.append(element("p", { class: "wiki-search-hint", text: "Escribe al menos dos caracteres. Puedes buscar “Niri”, “Wi-Fi” o “GRUB”." }));
+    return;
   }
+  const results = searchWikiIndex(state.data?.searchIndex, query, 12);
+  searchResults.append(element("p", { class: "wiki-search-count", text: `${results.length} ${results.length === 1 ? "resultado" : "resultados"}` }));
+  if (!results.length) {
+    searchResults.append(element("div", { class: "wiki-empty wiki-search-empty" }, [
+      element("h3", { text: "No encontramos esa respuesta" }), element("p", { text: "Prueba con menos palabras o explora los capítulos del manual." }),
+    ]));
+    return;
+  }
+  const list = element("div", { class: "wiki-search-result-list" });
+  results.forEach((result) => list.append(resultNode(result)));
+  searchResults.append(list);
+}
+
+function openSearch() {
+  if (!state.data || searchDialog.open) return;
+  searchDialog.showModal();
+  updateSearch();
+  requestAnimationFrame(() => searchInput.focus());
 }
 
 document.addEventListener("click", (event) => {
@@ -431,16 +370,36 @@ document.addEventListener("click", (event) => {
   const url = new URL(link.href, location.href);
   if (url.origin !== location.origin || !url.pathname.endsWith("/wiki.html")) return;
   event.preventDefault();
-  navigate(url.pathname.split("/").pop() + url.search + url.hash);
+  if (searchDialog.open) searchDialog.close();
+  navigate(`${url.pathname.split("/").pop()}${url.search}${url.hash}`);
 });
 
-document.getElementById("wiki-search").addEventListener("submit", (event) => {
-  event.preventDefault();
-  const query = document.getElementById("wiki-search-input").value.trim();
-  if (query.length >= 2) renderSearch(query);
+document.getElementById("wiki-search-launcher").addEventListener("click", openSearch);
+document.getElementById("wiki-search-close").addEventListener("click", () => searchDialog.close());
+document.getElementById("wiki-search").addEventListener("submit", (event) => event.preventDefault());
+searchInput.addEventListener("input", updateSearch);
+document.addEventListener("keydown", (event) => {
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+    event.preventDefault();
+    openSearch();
+  }
 });
-document.getElementById("wiki-categories-button").addEventListener("click", () => navigate({ view: "categories" }));
+
+chapterToggle.addEventListener("click", () => {
+  const open = chapterToggle.getAttribute("aria-expanded") !== "true";
+  chapterToggle.setAttribute("aria-expanded", String(open));
+  chapterNavigation.classList.toggle("is-open", open);
+});
+
+copyLink.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(location.href);
+    copyLink.textContent = "Enlace copiado";
+    setTimeout(() => { copyLink.textContent = "Copiar enlace"; }, 1800);
+  } catch {
+    setNotice("No pudimos copiar el enlace. Cópialo desde la barra del navegador.", "error");
+  }
+});
+
 window.addEventListener("popstate", renderRoute);
-
-await loadAuth();
 await renderRoute();

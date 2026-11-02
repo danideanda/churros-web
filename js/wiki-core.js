@@ -18,6 +18,11 @@ export function articleHref(title) {
   return `wiki.html?${params}`;
 }
 
+export function chapterHref(chapter) {
+  const params = new URLSearchParams({ view: "chapter", chapter: String(chapter || "") });
+  return `wiki.html?${params}`;
+}
+
 export function normalizeRoute(search = "") {
   const params = new URLSearchParams(search);
   const view = params.get("view") || (params.has("article") ? "article" : "home");
@@ -25,6 +30,10 @@ export function normalizeRoute(search = "") {
 
   if (view === "home") return { view: "home" };
   if (view === "recent" || view === "categories") return { view };
+  if (view === "chapter") {
+    const chapter = String(params.get("chapter") || "").trim();
+    return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(chapter) ? { view, chapter } : { view: "home" };
+  }
   if (view === "category") {
     const category = cleanTitle(params.get("category"));
     return category ? { view, category } : { view: "home" };
@@ -93,6 +102,59 @@ export function normalizeSearchResults(payload) {
       snippet: String(item.snippet || ""),
       timestamp: item.timestamp || null,
     }));
+}
+
+function foldSearchText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("es")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function plainSnippet(value, maxLength = 180) {
+  const plain = String(value || "")
+    .replace(/[<>]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return plain.length > maxLength ? `${plain.slice(0, maxLength - 1).trimEnd()}…` : plain;
+}
+
+export function searchWikiIndex(index, query, limit = 12) {
+  const terms = foldSearchText(query).split(" ").filter(Boolean);
+  if (!terms.length || !Array.isArray(index)) return [];
+
+  return index
+    .map((entry, order) => {
+      const title = cleanTitle(entry?.title);
+      const slug = String(entry?.slug || "").trim();
+      if (!title || !slug) return null;
+      const titleText = foldSearchText(title);
+      const chapterText = foldSearchText(entry.chapter);
+      const bodyText = foldSearchText(entry.text);
+      const searchable = `${titleText} ${chapterText} ${bodyText}`;
+      const compactTitle = titleText.replaceAll(" ", "");
+      const compactSearchable = searchable.replaceAll(" ", "");
+      if (!terms.every((term) => searchable.includes(term) || compactSearchable.includes(term))) return null;
+      const score = terms.reduce((total, term) => (
+        total + (titleText.includes(term) || compactTitle.includes(term) ? 12 : 0) + (chapterText.includes(term) ? 3 : 0) + (bodyText.includes(term) ? 1 : 0)
+      ), titleText === terms.join(" ") ? 30 : 0);
+      return {
+        score,
+        order,
+        result: {
+          title,
+          slug,
+          chapter: cleanTitle(entry.chapter) || "Wiki ChurrOS",
+          snippet: plainSnippet(entry.text),
+        },
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.score - a.score || a.order - b.order)
+    .slice(0, Math.max(0, Number(limit) || 0))
+    .map(({ result }) => result);
 }
 
 export function normalizeHistory(payload) {
