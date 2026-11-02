@@ -7,6 +7,7 @@ import test from "node:test";
 import { buildWikiIndex, parseMetadata, parseSidebar } from "../scripts/github-wiki-core.mjs";
 
 const sourceDir = process.env.WIKI_SOURCE_DIR ? resolve(process.env.WIKI_SOURCE_DIR) : null;
+const wikiTest = sourceDir ? test : test.skip;
 const expectedChapters = [
   "Conocer ChurrOS",
   "Descargar y probar",
@@ -32,7 +33,7 @@ async function loadIndex() {
   });
 }
 
-test("the stable wiki publishes eight chapters, Home, and 56 guide articles", async () => {
+wikiTest("the stable wiki publishes eight chapters, Home, and 56 guide articles", async () => {
   const sidebar = await readFile(join(sourceDir, "_Sidebar.md"), "utf8");
   const chapters = parseSidebar(sidebar);
 
@@ -42,7 +43,7 @@ test("the stable wiki publishes eight chapters, Home, and 56 guide articles", as
   assert.doesNotMatch(sidebar, /\b(?:beta|pre[- ]?beta|i686|raspberry|aarch64|server)\b/i);
 });
 
-test("every stable article has metadata, useful depth, and safe scope", async () => {
+wikiTest("every stable article has metadata, useful depth, and safe scope", async () => {
   const index = await loadIndex();
   assert.equal(index.pageCount, 57);
 
@@ -60,7 +61,7 @@ test("every stable article has metadata, useful depth, and safe scope", async ()
   }
 });
 
-test("Home describes the stable 1.4 experience and both published desktops", async () => {
+wikiTest("Home describes the stable 1.4 experience and both published desktops", async () => {
   const index = await loadIndex();
   const home = index.articles[index.mainPage];
 
@@ -71,7 +72,7 @@ test("Home describes the stable 1.4 experience and both published desktops", asy
   assert.doesNotMatch(home.html, /\b(?:beta|pre[- ]?beta|experimental)\b/i);
 });
 
-test("high-risk guides include checks, backup, expected result, and recovery", async () => {
+wikiTest("high-risk guides include checks, backup, expected result, and recovery", async () => {
   const index = await loadIndex();
   const risky = [
     "crear-un-usb-desde-linux",

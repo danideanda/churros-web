@@ -11,7 +11,8 @@
     "test": "node --test",
     "check": "node --check server/index.js && node --check server/app.js && node --check server/wiki-service.js && node --check api/distrowatch.js && node --check lib/distrowatch.js && node --check scripts/update-distrowatch.js && node --check js/app.js && node --check js/wiki.js && node --check js/wiki-core.js && node --check scripts/github-wiki-core.mjs && node --check scripts/build-github-wiki.mjs && bash -n scripts/import-wiki-content.sh",
     "check:config": "node --env-file=.env.example server/check-config.js",
-    "import:wiki": "bash scripts/import-wiki-content.sh"
+    "import:wiki": "bash scripts/import-wiki-content.sh",
+    "build:wiki": "node scripts/build-github-wiki.mjs --output wiki-data/wiki.json"
   },
   "dependencies": {
     "marked": "^18.1.2",
