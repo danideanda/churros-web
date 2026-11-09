@@ -217,10 +217,6 @@ input, textarea, select { font-size: 16px; }
 
 .wiki-noscript { max-width: 58rem; margin: 0 auto 3rem; padding: 1rem; border: 1px solid var(--wiki-border-default); color: var(--wiki-text-secondary); }
 .wiki-noscript a { color: var(--wiki-action-strong); text-decoration: underline; }
-.wiki-footer { max-width: 88rem; margin: 0 auto; padding: 2rem 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px)); display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--wiki-border-default); color: var(--wiki-text-secondary); font-size: .82rem; }
-.wiki-footer div { display: flex; gap: .8rem; }
-.wiki-footer a { min-height: 2.75rem; display: inline-flex; align-items: center; color: var(--wiki-action-strong); font-weight: 800; }
-.dark .wiki-footer { background: var(--wiki-color-coffee); }
 
 @media (hover: hover) and (pointer: fine) {
   .wiki-icon-button:hover, .wiki-rail nav a:hover, .wiki-actions :is(a, button):hover { background: rgba(249, 115, 22, .08); color: var(--wiki-action-strong); }
@@ -228,7 +224,7 @@ input, textarea, select { font-size: 16px; }
   .wiki-quick-paths a:hover, .wiki-route-card:hover, .wiki-chapter-articles a:hover, .wiki-search-result:hover { background: rgba(249, 115, 22, .055); }
   .wiki-prose a:hover, .wiki-context a:hover { color: var(--wiki-action-primary); }
 }
-:where(.wiki-page, .wiki-footer, .wiki-search-dialog) :focus-visible { outline: 3px solid var(--wiki-focus-ring); outline-offset: 3px; }
+:where(.wiki-page, .wiki-search-dialog) :focus-visible { outline: 3px solid var(--wiki-focus-ring); outline-offset: 3px; }
 
 @media (max-width: 76rem) {
   .wiki-layout { grid-template-columns: 13rem minmax(0, 1fr); }
@@ -260,7 +256,6 @@ input, textarea, select { font-size: 16px; }
   .wiki-pagination a:last-child { grid-column: 1; text-align: left; }
   .wiki-search-dialog { width: 100vw; max-width: none; max-height: 100dvh; height: 100dvh; border: 0; }
   #wiki-search-results { max-height: calc(100dvh - 11rem); }
-  .wiki-footer, .wiki-footer div { flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {
