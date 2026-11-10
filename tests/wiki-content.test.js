@@ -84,7 +84,7 @@ test("the main page is featured and links to the essential guides", () => {
   }
 });
 
-test("the 1.4 desktop releases are current and 1.3 remains in the version history", () => {
+test("the 1.5 desktop releases are current and 1.4 remains in the version history", () => {
   const niri = JSON.parse(readFileSync(join(root, "data", "releases-niri.json"), "utf8"));
   const xfce = JSON.parse(readFileSync(join(root, "data", "releases-xfce.json"), "utf8"));
   const downloadPage = readFileSync(join(contentDir, "Descargar_ChurrOS.wiki"), "utf8");
@@ -94,24 +94,26 @@ test("the 1.4 desktop releases are current and 1.3 remains in the version histor
   assert.deepEqual(
     { version: niri.at(-1).version, date: niri.at(-1).date, iso: niri.at(-1).url.ISO },
     {
-      version: "1.4",
-      date: "2026-10-26",
-      iso: "https://download.churroslinux.org/ChurrOS-2026.10.26-x86_64-niri-1.4.iso",
+      version: "1.5",
+      date: "2026-11-09",
+      iso: "https://download.churroslinux.org/ChurrOS-1.5-niri-x86_64.iso",
     },
   );
   assert.deepEqual(
     { version: xfce.at(-1).version, date: xfce.at(-1).date, iso: xfce.at(-1).url.ISO },
     {
-      version: "1.4",
-      date: "2026-10-26",
-      iso: "https://download.churroslinux.org/ChurrOS-2026.10.26-x86_64-xfce-1.4.iso",
+      version: "1.5",
+      date: "2026-11-09",
+      iso: "https://download.churroslinux.org/ChurrOS-1.5-xfce-x86_64.iso",
     },
   );
-  assert.match(downloadPage, /Versión actual: 1\.4/);
-  assert.match(downloadPage, /ChurrOS-2026\.10\.26-x86_64-niri-1\.4\.iso/);
-  assert.match(downloadPage, /ChurrOS-2026\.10\.26-x86_64-xfce-1\.4\.iso/);
-  assert.match(websiteDownloadPage, /ChurrOS-2026\.10\.26-x86_64-niri-1\.4\.iso/);
-  assert.match(websiteDownloadPage, /ChurrOS-2026\.10\.26-x86_64-xfce-1\.4\.iso/);
-  assert.match(historyPage, /\| 1\.3\n\| 2026-10-12/);
-  assert.match(historyPage, /\| '''1\.4'''\n\| '''2026-10-26'''/);
+  assert.equal(niri.at(-2).version, "1.4");
+  assert.equal(xfce.at(-2).version, "1.4");
+  assert.match(downloadPage, /Versión actual: 1\.5/);
+  assert.match(downloadPage, /ChurrOS-1\.5-niri-x86_64\.iso/);
+  assert.match(downloadPage, /ChurrOS-1\.5-xfce-x86_64\.iso/);
+  assert.match(websiteDownloadPage, /ChurrOS-1\.5-niri-x86_64\.iso/);
+  assert.match(websiteDownloadPage, /ChurrOS-1\.5-xfce-x86_64\.iso/);
+  assert.match(historyPage, /\| 1\.4\n\| 2026-10-26/);
+  assert.match(historyPage, /\| '''1\.5'''\n\| '''2026-11-09'''/);
 });
