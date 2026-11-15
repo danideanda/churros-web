@@ -2,18 +2,18 @@ Las imágenes oficiales se publican en [https://download.churroslinux.org downlo
 
 * [https://www.churroslinux.org/download.html Página oficial de descargas]
 
-== Versión actual: 1.5 ==
-La versión '''1.5''' se publicó el '''9 de noviembre de 2026'''.
+== Versión actual: 1.5.5 ==
+La versión '''1.5.5''' se publicó el '''15 de noviembre de 2026'''.
 
 === Niri Edition ===
 La edición predeterminada, con Niri sobre Wayland.
 
-[https://download.churroslinux.org/ChurrOS-1.5-niri-x86_64.iso Descargar ChurrOS 1.5 Niri (ISO)]
+[https://download.churroslinux.org/ChurrOS-1.5.5-niri-x86_64.iso Descargar ChurrOS 1.5.5 Niri (ISO)]
 
 === XFCE Edition ===
 La edición con escritorio tradicional XFCE sobre X11.
 
-[https://download.churroslinux.org/ChurrOS-1.5-xfce-x86_64.iso Descargar ChurrOS 1.5 XFCE (ISO)]
+[https://download.churroslinux.org/ChurrOS-1.5.5-xfce-x86_64.iso Descargar ChurrOS 1.5.5 XFCE (ISO)]
 
 === Server Edition ===
 La edición Server se construye desde el código fuente con <code>./churros build --edition server</code> y no aparece como descarga directa en la página principal. Instala un sistema sin escritorio, accesible por SSH. Consulta [[Ediciones de ChurrOS]] y [[Edición Server]].
