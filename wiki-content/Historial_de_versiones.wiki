@@ -35,8 +35,11 @@ ChurrOS es una distribución de liberación continua. Estas son las versiones pu
 | 1.5
 | 2026-11-09
 |-
-| '''1.5.5'''
-| '''2026-11-15'''
+| 1.5.5
+| 2026-11-15
+|-
+| '''1.5.7'''
+| '''2026-11-26'''
 |}
 
 == XFCE Edition ==
@@ -62,12 +65,15 @@ ChurrOS es una distribución de liberación continua. Estas son las versiones pu
 | 1.5
 | 2026-11-09
 |-
-| '''1.5.5'''
-| '''2026-11-15'''
+| 1.5.5
+| 2026-11-15
+|-
+| '''1.5.7'''
+| '''2026-11-26'''
 |}
 
 == Notas ==
-* La versión más reciente publicada es la '''1.5.5'''.
+* La versión más reciente publicada es la '''1.5.7'''.
 * Las fechas son las de publicación indicadas por el proyecto.
 * Las ISO anteriores siguen disponibles en el servidor de descargas con el nombre de archivo de cada versión.
 * No hay ramas LTS: para mantener el sistema al día, actualiza con <code>sudo pacman -Syu</code>.

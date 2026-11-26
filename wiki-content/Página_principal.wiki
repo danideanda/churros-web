@@ -28,6 +28,6 @@ __NOTOC__
 * [[Contribuir a ChurrOS]] — documentación, pruebas y código.
 
 == Estado del proyecto ==
-ChurrOS es un proyecto independiente y comunitario. La versión más reciente publicada es la '''1.5.5''' (15 de noviembre de 2026). Consulta el [[Historial de versiones]] para ver las ediciones anteriores.
+ChurrOS es un proyecto independiente y comunitario. La versión más reciente publicada es la '''1.5.7''' (26 de noviembre de 2026). Consulta el [[Historial de versiones]] para ver las ediciones anteriores.
 
 [[Categoría:Destacados]]
