@@ -1,0 +1,51 @@
+name: Pruebas en navegador (descargas)
+
+# Abre download.html en Chromium, Firefox y WebKit y comprueba que los botones
+# y el historial llevan a ISO que existen en el servidor y que están en su
+# SHA256SUMS. A diario también, porque una ISO puede desaparecer del servidor
+# sin que cambie nada en este repositorio.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "37 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Instalar navegadores de Playwright
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Pruebas en navegador
+        run: npx playwright test
+
+      - name: Informe de Playwright
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
