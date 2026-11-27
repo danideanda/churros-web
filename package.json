@@ -13,10 +13,14 @@
     "check:config": "node --env-file=.env.example server/check-config.js",
     "import:wiki": "bash scripts/import-wiki-content.sh",
     "build:wiki": "node scripts/build-github-wiki.mjs --output wiki-data/wiki.json",
-    "sync:wiki": "bash scripts/sync-github-wiki.sh wiki-data/wiki.json"
+    "sync:wiki": "bash scripts/sync-github-wiki.sh wiki-data/wiki.json",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "marked": "^18.1.2",
     "sanitize-html": "^2.18.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
   }
 }
