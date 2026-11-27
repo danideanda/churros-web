@@ -23,10 +23,10 @@ const hrefs = (locator) => locator.evaluateAll((links) => links.map((a) => a.hre
 
 // download.churroslinux.org responde 503 cuando está ocupado (varias descargas
 // a la vez): eso no es un enlace roto. Se reintenta con espera; un 404, no.
-async function headWithRetry(request, url, attempts = 5) {
+async function withRetry(request, method, url, attempts = 5) {
   let response;
   for (let i = 0; i < attempts; i++) {
-    response = await request.head(url, { headers: HEADERS, timeout: 60_000, maxRedirects: 10 });
+    response = await request[method](url, { headers: HEADERS, timeout: 60_000, maxRedirects: 10 });
     if (response.status() < 500) return response;
     await new Promise((resolve) => setTimeout(resolve, 5_000 * (i + 1)));
   }
@@ -69,7 +69,7 @@ test.describe("en el servidor de descargas", () => {
     expect(isos.length).toBeGreaterThan(2);
     const broken = [];
     for (const iso of isos) {
-      const response = await headWithRetry(request, iso);
+      const response = await withRetry(request, "head", iso);
       const size = Number(response.headers()["content-length"] || 0);
       // Una ISO de verdad, no una página de error servida con 200.
       if (response.status() !== 200 || size < 500_000_000) broken.push(`${iso} → HTTP ${response.status()}, ${size} bytes`);
@@ -79,7 +79,7 @@ test.describe("en el servidor de descargas", () => {
 
   test("las ISO de los botones están en SHA256SUMS", async ({ page, request }) => {
     await openDownloads(page);
-    const response = await request.get(`${SERVER}SHA256SUMS`, { headers: HEADERS, timeout: 60_000 });
+    const response = await withRetry(request, "get", `${SERVER}SHA256SUMS`);
     expect(response.status()).toBe(200);
     const sums = await response.text();
     for (const href of await hrefs(page.locator("a.btn-edition-download"))) {
